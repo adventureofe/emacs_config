@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: amdahls-law 
+# key: amdahls-law 
+# --
+amdahls_law_ratio = lambda p, s : 1 / (1 - p + p/s)
+amdahls_law_percentage = lambda p, s : 1 / (1 - (p/100) + (p/100)/s)
+

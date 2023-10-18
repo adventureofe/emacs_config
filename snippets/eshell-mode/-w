@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: -w
+# key: -w
+# --
+clang $0 -Wall -Werror -Wshadow -Wdouble-promotion -Wconversion -Wextra -Wundef

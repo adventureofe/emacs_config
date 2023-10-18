@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: area-hexagon
+# key: area-hexagon
+# --
+(defn area-hexagon
+  [side]
+  (* (Math/pow side 2) (/ (* 3 (Math/sqrt 3)) 2)))

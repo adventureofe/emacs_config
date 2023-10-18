@@ -1,0 +1,11 @@
+# -*- mode: snippet -*-
+# name: area-circle
+# key: area-circle
+# --
+(defn area-circle-radius
+  [radius]
+  (* Math/PI (Math/pow radius 2)))
+
+(defn area-circle-circumference
+  [circumference]
+  (/ (Math/pow circumference 2) (* 4 Math/PI)))

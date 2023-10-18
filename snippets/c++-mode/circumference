@@ -1,0 +1,13 @@
+# -*- mode: snippet -*-
+# name:circumference
+# key:circumference
+# --
+double circle_circumference_radius(double radius)
+{
+    return 2 * std::numbers::pi * radius;
+}
+
+double circle_circumference_area(double area)
+{
+    return 2 * std::sqrt(std::numbers::pi * area);
+}

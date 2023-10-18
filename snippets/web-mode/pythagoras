@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: pythagoras
+# key: pythagoras
+# --
+const pythagoras_hypotenuse = (a, b) => Math.sqrt(Math.pow(a, 2) + Math.pow(b, 2))
+
+const pythagoras_side = (hypotenuse, b) => Math.sqrt(Math.pow(hypotenuse, 2) - Math.pow(b, 2))

@@ -1,0 +1,12 @@
+# -*- mode: snippet -*-
+# name: main 
+# key: main
+# --
+#+TITLE:  
+#+AUTHOR: AdventureOfE
+#+DESCRIPTION:
+#+STARTUP: overview
+#+OPTIONS: toc:2
+
+* TABLE OF CONTENTS :toc:
+

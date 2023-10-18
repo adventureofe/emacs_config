@@ -1,0 +1,9 @@
+# -*- mode: snippet -*-
+# name: area-circle
+# key: area-circle
+# --
+area_circle_radius :: Double -> Double
+area_circle_radius radius = pi * radius^2
+
+area_circle_circumference :: Double -> Double
+area_circle_circumference circumference = circumference^2 / (4 * pi)

@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name:area-pentagon
+# key:area-pentagon
+# --
+double area_pentagon(double side)
+{
+  return 0.25 * std::sqrt(5 * (5 + 2 * std::sqrt(5))) * std::pow(side, 2);
+}

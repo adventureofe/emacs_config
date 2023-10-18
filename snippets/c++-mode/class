@@ -1,0 +1,14 @@
+# -*- mode: snippet -*-
+# name:class
+# key:class
+# --
+//class definition
+class name
+{
+private:
+    int id;
+public:
+    int id;
+
+    void print();
+};

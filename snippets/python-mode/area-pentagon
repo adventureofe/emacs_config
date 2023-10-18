@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: area-pentagon
+# key: area-pentagon
+# --
+area_pentagon = lambda side : 0.25 * math.sqrt(5 * (5 + 2 * math.sqrt(5))) * pow(side, 2)

@@ -1,0 +1,9 @@
+# -*- mode: snippet -*-
+# name: area-circle
+# key: area-circle
+# --
+(defun area-circle-radius (radius)
+  (* pi (expt radius 2)))
+
+(defun area-circle-circumference (circumference)
+  (/ (expt circumference 2) (* 4 pi)))

@@ -1,0 +1,51 @@
+# -*- mode: snippet -*-
+# name: curses
+# key: curses
+# --
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+#include <math.h>
+#include <string.h>
+#include <time.h>
+
+#include <ncurses.h>
+
+// print all included cmd args (removes warning)
+void arg_print(int argc, char** argv)
+{
+    for(int i = 1; i < argc; i++){
+        printf("arg[%d]: %s", i, argv[i]);
+    }
+    if(argc > 1){
+        printf("\n");
+    }
+}
+
+int main(int argc, char** argv)
+{
+    arg_print(argc, argv);
+
+    //initialie the screen
+    //sets up memory and clears the screen
+    initscr();
+
+    //prints a const char * to a window
+    printw("Hello World");
+
+    //refresh screen to match what's in memory
+    refresh();
+
+    //wait to press a key, returns int value of that key
+    int c = getch();
+
+    printw("%d", c);
+
+    getch();
+
+    //deallocates memory and ends ncurses
+    endwin();
+
+    printf("Hello, World!\n");
+    return EXIT_SUCCESS;
+}

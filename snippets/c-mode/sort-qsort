@@ -1,0 +1,13 @@
+# -*- mode: snippet -*-
+# name:qsort
+# key:qsort
+# --
+int compare(const void *a, const void *b)
+{
+    int a_val = *(int *)a; //convert to int pointer and deference to get value
+    int b_val = *(int *)b; //convert to int pointer and deference to get value
+
+    return a_val - b_val; //if returns < 0, a comes first, if return > 0 b comes first
+}
+
+qsort(array, length, sizeof(int), compare);

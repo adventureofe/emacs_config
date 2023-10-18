@@ -1,0 +1,27 @@
+# -*- mode: snippet -*-
+# name: angles
+# key: angles
+# --
+(defn degrees-to-radians
+  [degrees]
+  (/ (* Math/PI degrees) 180))
+
+(defn radians-to-degrees
+  [radians]
+  (/ (* radians 180) Math/PI))
+
+(defn radians-to-gradians
+  [radians]
+  (/ (* radians 200) Math/PI))
+
+(defn gradians-to-radians
+  [gradians]
+  (/ (* gradians Math/PI) 200))
+
+(defn degrees-to-gradians
+  [degrees]
+  (radians-to-gradians (degrees-to-radians degrees)))
+
+(defn gradians-to-degrees
+  [gradians]
+  (radians-to-degrees (gradians-to-radians gradians)))

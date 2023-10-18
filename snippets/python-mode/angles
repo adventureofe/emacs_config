@@ -1,0 +1,11 @@
+# -*- mode: snippet -*-
+# name: angles
+# key: angles
+# --
+import math
+degrees_to_radians = lambda degrees : degrees * math.pi / 180
+radians_to_degrees = lambda radians : radians * 180 / math.pi
+radians_to_gradians = lambda radians : radians * 200 / math.pi
+gradians_to_radians = lambda gradians: gradians * math.pi / 200
+degrees_to_gradians = lambda degrees : radians_to_gradians(degrees_to_radians(degrees))
+gradians_to_degrees = lambda gradians : radians_to_degrees(gradians_to_radians(gradians))

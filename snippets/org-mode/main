@@ -1,0 +1,9 @@
+# -*- mode: snippet -*-
+# name: main 
+# key: main 
+# --
+#+TITLE:
+#+AUTHOR: theadventureofe
+#+EMAIL: theadventureofe@gmail.com
+#+STARTUP: overview
+-*- coding: utf-8 -*-

@@ -1,0 +1,19 @@
+# -*- mode: snippet -*-
+# name: main 
+# key: main
+# --
+# name
+
+# By theadventureofe
+
+# description
+
+# the_adventure_of_e λ
+
+import random
+
+def main():
+    print("hello world")
+
+if __name__ == "__main__":
+    main()

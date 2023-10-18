@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: area-hexagon
+# key: area-hexagon
+# --
+area_hexagon = lambda side : pow(side, 2) * (3 * math.sqrt(3)) / 2

@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: find-collinearity
+# key: find-collinearity
+# --
+bool find_collinearity(double x1, double y1, double x2, double y2, double x3, double y3)
+{
+    return (y2 - y1) / (x2 - x1) == (y3 - y2) / (x3 - x2);
+}

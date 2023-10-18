@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: area-octagon
+# key: area-octagon
+# --
+area_octagon = lambda side : 2 * (1 + math.sqrt(2)) * pow(side , 2)

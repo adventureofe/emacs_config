@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: area-hexagon
+# key: area-hexagon
+# --
+static double area_hexagon(double side)
+{
+    return Math.pow(side, 2) * (3 * Math.sqrt(3)) / 2;
+}

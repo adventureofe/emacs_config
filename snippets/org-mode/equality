@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name:equality
+# key:equality
+# --
+equality-approx-equal
+equality-greater-or-equal
+equality-less-than-or-equal
+equality-not-equal

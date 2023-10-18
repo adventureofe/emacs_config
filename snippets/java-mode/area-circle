@@ -1,0 +1,13 @@
+# -*- mode: snippet -*-
+# name: area-circle
+# key: area-circle
+# --
+static double area_circle_radius(double radius)
+{
+    return Math.PI * Math.pow(radius, 2);
+}
+
+static double area_circle_circumference(double circumference)
+{
+    return Math.pow(circumference, 2) / (4 * Math.PI);
+}

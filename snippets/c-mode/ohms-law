@@ -1,0 +1,18 @@
+# -*- mode: snippet -*-
+# name: ohms-law
+# key: ohms-law
+# --
+double ohms_law_current(double voltage, double resistance)
+{
+    return voltage / resistance;
+}
+
+double ohms_law_voltage(double current, double resistance)
+{
+    return current * resistance;
+}
+
+double ohms_law_resistance(double voltage, double current)
+{
+    return voltage / current;
+}

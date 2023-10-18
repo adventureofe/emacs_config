@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: circumference 
+# key: circumference 
+# --
+circle_circumference_radius = lambda radius : 2 * math.pi * radius
+circle_circumference_area = lambda area : 2 * math.sqrt(math.pi * area) 
+

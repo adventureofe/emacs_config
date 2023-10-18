@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name:area-equal-triangle
+# key:area-equal-triangle
+# --
+(defn area-equal-triangle
+  [side]
+  (* (Math/pow side 2) (/ (Math/sqrt 3) 4)))

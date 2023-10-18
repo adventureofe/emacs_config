@@ -1,0 +1,17 @@
+# -*- mode: snippet -*-
+# name:amdahls-law
+# key:amdahls-law
+# --
+//javascript
+const amdahls_law_ratio = (p, s) =>  1 / (1 - p + p/s)
+const amdahls_law_percentage = (p, s) => 1 / (1 - (p/100) + (p/100)/s)
+
+console.log(amdahls_law_ratio(23, 45))
+console.log(amdahls_law_percentage(23, 45))
+
+//typescript
+const amdahls_law_ratio = (p:number, s:number): number =>  1 / (1 - p + p/s)
+const amdahls_law_percentage = (p:number, s:number): number => 1 / (1 - (p/100) + (p/100)/s)
+
+console.log(amdahls_law_ratio(23, 45))
+console.log(amdahls_law_percentage(23, 45))

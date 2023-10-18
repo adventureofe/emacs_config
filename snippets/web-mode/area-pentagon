@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: area-pentagon
+# key: area-pentagon
+# --
+const area_pentagon = side => 0.25 * Math.sqrt(5 * (5 + 2 * Math.sqrt(5))) * Math.pow(side, 2)

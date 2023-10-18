@@ -1,0 +1,9 @@
+# -*- mode: snippet -*-
+# name: herons-formula
+# key: herons-formula
+# --
+// order sides in descending order
+double herons_formula(double a, double b, double c)
+{
+    return sqrt((a+(b+c)) * (c-(a-b)) * (c+(a-b)) * (a+(b-c))) / 4;
+}

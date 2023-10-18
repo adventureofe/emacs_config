@@ -1,0 +1,21 @@
+# -*- mode: snippet -*-
+# name: area-circle 
+# key: area-circle 
+# --
+
+#include <cmath>
+#include <numbers> 
+// -std=c++20
+
+double area_circle_radius(double radius)
+{
+  return std::numbers::pi * std::pow(radius, 2);
+}
+
+double area_circle_circumference(double circumference)
+{
+  return std::pow(circumference, 2) / (4 * std::numbers::pi);
+}
+
+
+

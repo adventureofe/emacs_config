@@ -1,0 +1,29 @@
+# -*- mode: snippet -*-
+# name:angles
+# key:angles
+# --
+double degrees_to_radians(double degrees)
+{
+    return degrees * std::numbers::pi / 180;
+}
+
+double radians_to_degrees(double radians)
+{
+  return radians * 180/ std::numbers::pi;
+}
+
+double radians_to_gradians(double radians){
+  return radians * 200 / std::numbers::pi;
+}
+
+double gradians_to_radians(double gradians){
+  return gradians * std::numbers::pi / 200;
+}
+
+double degrees_to_gradians(double degrees){
+  return radians_to_gradians(degrees_to_radians(degrees));
+}
+
+double gradians_to_degrees(double gradians){
+  return radians_to_degrees(gradians_to_radians(gradians));
+}

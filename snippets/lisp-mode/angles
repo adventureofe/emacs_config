@@ -1,0 +1,24 @@
+# -*- mode: snippet -*-
+# name: area-circle
+# key: area-circle
+# --
+(defun degrees-to-radians (degrees)
+  (/ (* pi degrees) 180))
+
+(defun radians-to-degrees (radians)
+  (/ (* radians 180) pi))
+
+(defun radians-to-gradians (radians)
+  (/ (* radians 200) pi))
+
+(defun gradians-to-radians (gradians)
+  (/ (* gradians pi) 200))
+
+(defun degrees-to-gradians (degrees)
+  (radians-to-gradians (degrees-to-radians degrees)))
+
+(defun gradians-to-degrees (gradians)
+  (radians-to-degrees (gradians-to-radians gradians)))
+
+(defun area-circle-radius (radius)
+  (* pi (expt radius 2)))

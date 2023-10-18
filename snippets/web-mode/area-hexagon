@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: area-hexagon
+# key: area-hexagon
+# --
+const area_hexagon = side => Math.pow(side, 2) * (3 * Math.sqrt(3)) / 2

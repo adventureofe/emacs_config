@@ -1,0 +1,13 @@
+# -*- mode: snippet -*-
+# name: pythagoras
+# key: pythagoras
+# --
+static double pythagoras_hypotenuse(double a, double b)
+{
+    return Math.sqrt(Math.pow(a, 2) + Math.pow(b, 2));
+}
+
+static double pythagoras_side(double hypotenuse, double b)
+{
+    return Math.sqrt(Math.pow(hypotenuse, 2) - Math.pow(b, 2));
+}

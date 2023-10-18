@@ -1,0 +1,21 @@
+# -*- mode: snippet -*-
+# name: angles
+# key: angles
+# --
+degrees_to_radians :: Double -> Double
+degrees_to_radians degrees = degrees * pi / 180
+
+radians_to_degrees :: Double -> Double
+radians_to_degrees radians = radians * 180 / pi
+
+radians_to_gradians :: Double -> Double
+radians_to_gradians radians = radians * 200 / pi
+
+gradians_to_radians :: Double -> Double
+gradians_to_radians gradians = gradians * pi / 200
+
+degrees_to_gradians :: Double -> Double
+degrees_to_gradians degrees = radians_to_gradians $ degrees_to_radians degrees
+
+gradians_to_degrees :: Double -> Double
+gradians_to_degrees gradians = radians_to_degrees $ gradians_to_radians gradians

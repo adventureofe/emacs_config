@@ -1,0 +1,18 @@
+# -*- mode: snippet -*-
+# name: latex_line
+# key: latex_line
+# --
+\begin{equation}
+\Huge
+y = mx + c
+\end{equation}
+
+\begin{equation}
+\Huge
+Ax + By + C = 0
+\end{equation}
+
+\begin{equation}
+\Huge
+y - b = m(x - a)
+\end{equation}

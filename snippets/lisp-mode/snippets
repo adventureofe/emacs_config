@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: snippets
+# key: snippets
+# --
+(insert 
+ "\n" 
+ (shell-command-to-string "ls ~/.emacs.d/snippets/lisp-mode"))

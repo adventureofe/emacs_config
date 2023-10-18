@@ -1,0 +1,10 @@
+# -*- mode: snippet -*-
+# name: angles
+# key: angles
+# --
+const degrees_to_radians = degrees => degrees * Math.PI / 180
+const radians_to_degrees = radians => radians * 180 / Math.PI
+const radians_to_gradians = radians => radians * 200 / Math.PI
+const gradians_to_radians = gradians => gradians * Math.PI / 200
+const degrees_to_gradians = degrees => radians_to_gradians(degrees_to_radians(degrees))
+const gradians_to_degrees = gradians => radians_to_degrees(gradians_to_radians(gradians))

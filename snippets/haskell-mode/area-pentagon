@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: area-pentagon
+# key: area-pentagon
+# --
+area_pentagon :: Double -> Double
+area_pentagon side = 0.25 * sqrt(5 * (5 + 2 * sqrt(5))) * side^2

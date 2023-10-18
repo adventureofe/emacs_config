@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: homepage 
+# key: homepage
+# --
+(find-file "/home/frog/private/org/home.org")

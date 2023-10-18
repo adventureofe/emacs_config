@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name:area-equal-triangle
+# key:area-equal-triangle
+# --
+double area_equal_triangle(double side)
+{
+    return (sqrt(3) / 4) * pow(side, 2);
+}

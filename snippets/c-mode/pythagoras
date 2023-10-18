@@ -1,0 +1,13 @@
+# -*- mode: snippet -*-
+# name: pythagoras
+# key: pythagoras
+# --
+double pythagoras_hypotenuse(double a, double b)
+{
+    return sqrt(pow(a, 2) + pow(b, 2));
+}
+
+double pythagoras_side(double hypotenuse, double b)
+{
+    return sqrt(pow(hypotenuse, 2) - pow(b, 2));
+}

@@ -1,0 +1,9 @@
+# -*- mode: snippet -*-
+# name:table-four
+# key:table-four
+# --
+| table | two | three | four |
+|-------+-----+-------+------|
+|       |     |       |      |
+|       |     |       |      |
+

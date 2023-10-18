@@ -1,0 +1,29 @@
+# -*- mode: snippet -*-
+# name:distance
+# key:distance
+# --
+double metre_to_mm(double metre){return metre * 1000;}
+double metre_to_cm(double metre){return metre * 100;}
+double metre_to_inch(double metre){return metre * 39.37007874;}
+double metre_to_yard(double metre){return metre * 1.0936132983;}
+double metre_to_km(double metre){return metre * 0.001;}
+double metre_to_mile(double metre){return metre * 0.0006213712;}
+double metre_to_nautical_mile(double metre){return metre * 0.0005399568;}
+
+double mm_to_inch(double mm){return mm * 0.03937007874;}
+double mm_to_cm(double cm){return cm / 10;}
+double mm_to_ft(double mm){return mm * 0.00328084;}
+double mm_to_yard(double mm){return mm * 0.0010936133;}
+double mm_to_metre(double mm){return mm * 0.001;}
+
+double cm_to_mm(double cm){return cm * 10;}
+double cm_to_inch(double cm){return cm * 0.3937007874;}
+double cm_to_ft(double cm){return cm * 0.0328084;}
+double cm_to_yard(double cm){return cm * 0.010936133;}
+double cm_to_metre(double cm){return cm * 0.01;}
+
+double inch_to_mm(double inch){return inch * 25.4;}
+double inch_to_cm(double inch){return inch * 2.54;}
+double inch_to_ft(double inch){return inch * 0.083333;}
+double inch_to_yard(double inch){return inch * 0.0277777778;}
+double inch_to_metre(double inch){return inch * 0.0254;}

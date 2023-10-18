@@ -1,0 +1,13 @@
+# -*- mode: snippet -*-
+# name:amdahls-law
+# key:amdahls-law
+# --
+static double amdahls_law_ratio(double p, double s)
+{
+    return 1 / (1 - p + p/s);
+}
+
+static double amdahls_law_percentage(double p, double s)
+{
+    return 1 / (1 - (p/100) + (p/100)/s);
+}

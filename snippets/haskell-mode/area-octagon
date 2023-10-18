@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: area-octagon
+# key: area-octagon
+# --
+area_octagon :: Double -> Double
+area_octagon side = 2 * (1 + sqrt 2) * side^2

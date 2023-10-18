@@ -1,0 +1,19 @@
+# -*- mode: snippet -*-
+# name: variadic
+# key: variadic
+# --
+double mean(int count,...)
+{
+    va_list ap;
+    va_start(ap, count);
+
+    double sum = 0;
+
+    for(size_t i = 0; i < count; i++)
+    {
+        sum += va_arg(ap, double);
+    }
+
+    va_end(ap);
+    return sum / count;
+}

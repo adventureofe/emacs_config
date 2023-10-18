@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: area-pentagon
+# key: area-pentagon
+# --
+(defn area-pentagon
+  [side]
+  (* 0.25 (Math/sqrt ( * 5 ( + 5 (* 2 (Math/sqrt 5))))) (Math/pow side 2)))

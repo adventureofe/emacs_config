@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: mage 
+# key: mage 
+# --
+wmname LG3D && cd /home/frog/Downloads/mage/ && java -jar XMageLauncher-0.3.8.jar

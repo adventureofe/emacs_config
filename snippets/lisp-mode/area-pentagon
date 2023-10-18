@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: area-pentagon
+# key: area-pentagon
+# --
+(defun area-pentagon (side)
+  (* 0.25 (sqrt (* 5 (+ 5 (* 2 (sqrt 5))))) (expt side 2)))

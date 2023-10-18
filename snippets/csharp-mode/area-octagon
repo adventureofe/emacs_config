@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: area-octagon
+# key: area-octagon
+# --
+static double area_octagon(double side)
+{
+    2 * (1 + Math.Sqrt(2)) * Math.Pow(side, 2);
+}

@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name:area-hexagon
+# key:area-hexagon
+# --
+double area_hexagon(double side)
+{
+    return std::pow(side, 2) * (3 * std::sqrt(3)) / 2;
+}

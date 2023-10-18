@@ -1,0 +1,26 @@
+# -*- mode: snippet -*-
+# name: odd-or-even 
+# key: odd-or-even 
+# --
+
+
+;; add backslashes around the speech marks of d is even and d is odd
+;; yasnippet seems to take them out
+(defun odd-or-even (x)
+  (find-file "oddOrEven.c")
+  (insert "#include <stdio.h>\n\n")
+  (insert "int main(){\n\n")
+  (insert (format "\tint x = %d;\n\n" x))
+  (insert "\tif(x % 2 == 0)\n")
+  (insert "\t\tprintf(\"%d is even.\", x);\n")
+  (insert "\telse\n")
+  (insert "\t\tprintf(\"%d is odd.\", x);\n\n")    
+  (insert "\treturn 0;\n")
+  (insert "}")
+  (save-buffer)
+  (kill-buffer) 
+  (shell-command "gcc oddOrEven.c -o oddOrEven")
+  (setq output (shell-command-to-string "./oddOrEven"))
+  (shell-command "rm oddOrEven.c oddOrEven")
+  (message output))
+

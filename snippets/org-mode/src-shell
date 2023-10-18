@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: src-shell
+# key: src-shell
+# --
+#+BEGIN_SRC shell
+$0
+#+END_SRC

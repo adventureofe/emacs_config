@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: latex-gradient
+# key: latex-gradient
+# --
+\begin{equation}
+\Huge
+M_{ab} = \frac{y_2 - y_1}{x_2 - x_1}
+\end{equation}

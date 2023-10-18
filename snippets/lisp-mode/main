@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: main
+# key: main
+# --
+(defun hello-world ()
+  (format t "Hello, world!~%"))

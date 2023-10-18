@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: area-octagon
+# key: area-octagon
+# --
+static double area_octagon(double side)
+{
+    return 2 * (1 + Math.sqrt(2)) * Math.pow(side, 2);
+}

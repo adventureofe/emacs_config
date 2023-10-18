@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: brightness
+# key: brightness
+# --
+xbacklight -set 30

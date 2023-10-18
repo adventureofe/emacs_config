@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: ohms-law 
+# key: ohms-law 
+# --
+ohms_law_current  = lambda voltage, resistance : voltage / resistance 
+ohms_law_voltage  = lambda current, resistance : current * resistance
+ohms_law_resistance = lambda voltage, current : voltage / current

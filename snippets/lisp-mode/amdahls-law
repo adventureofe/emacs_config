@@ -1,0 +1,9 @@
+# -*- mode: snippet -*-
+# name:amdahls-law
+# key:amdahls-law
+# --
+(defun amdahls-law-ratio (p s)
+  (/ 1.0 (+ (- 1.0 p) (/ p s))))
+
+(defun amdahls-law-percentage (p s)
+  (/ 1.0 (+ (- 1.0 (/ p 100.0)) (/ (/ p 100.0) s)))))

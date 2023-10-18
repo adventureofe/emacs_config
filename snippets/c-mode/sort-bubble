@@ -1,0 +1,27 @@
+# -*- mode: snippet -*-
+# name: sort-bubble
+# key: sort-bubble
+# --
+void swap(int *a, int *b)
+{
+    *a ^= *b ^= *a ^= *b;
+}
+
+void bubble_sort(int* arr, size_t n)
+{
+    bool still_swapping = true;
+
+    while(still_swapping)
+    {
+        still_swapping = false;
+
+        for (size_t i = 0; i < n - 1; i++)
+        {
+            if (arr[i] > arr[i + 1])
+            {
+                swap(&arr[i], &arr[i+1]);
+                still_swapping = true;
+            }
+        }
+    }
+}

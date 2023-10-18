@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: self-destruct
+# key: self-destruct
+# --
+(funcall (lambda ()(move-beginning-of-line nil)(kill-line)))

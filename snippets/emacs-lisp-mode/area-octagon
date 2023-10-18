@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: area-octagon
+# key: area-octagon
+# --
+(defun area-octagon (side)
+  (* 2 (expt side 2) (+ 1 (sqrt 2))))

@@ -1,0 +1,20 @@
+# -*- mode: snippet -*-
+# name: class
+# key: class
+# --
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+public class $1
+{
+    private static int id_counter = 0;
+
+    public $1()
+    {
+	    Id = id_counter++;
+    }
+
+    public int Id {get;}
+}

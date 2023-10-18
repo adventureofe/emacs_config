@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: area-circle
+# key: area-circle
+# --
+const area_circle_radius = radius => Math.PI * Math.pow(radius, 2)
+
+const area_circle_circumference = circumference => Math.pow(circumference, 2) / (4 * Math.PI)

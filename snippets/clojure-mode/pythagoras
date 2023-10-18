@@ -1,0 +1,11 @@
+# -*- mode: snippet -*-
+# name: pythagoras
+# key: pythagoras
+# --
+(defn pythagoras-hypotenuse
+  [a b]
+  (Math/sqrt (+ (Math/pow a 2) (Math/pow b 2))))
+
+(defn pythagoras-side
+  [hypotenuse b]
+  (Math/sqrt (- (Math/pow hypotenuse 2) (Math/pow b 2))))

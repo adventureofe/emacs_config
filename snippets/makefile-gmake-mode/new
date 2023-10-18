@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: new
+# key: new
+# --
+$1.o: src/$1.c headers/$1.h
+	clang -c  ./src/$1.c -W -Wall -Wextra -pedantic

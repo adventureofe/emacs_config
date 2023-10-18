@@ -1,0 +1,13 @@
+# -*- mode: snippet -*-
+# name: circumference
+# key: circumference
+# --
+double circle_circumference_radius(double radius)
+{
+    return 2 * M_PI * radius;
+}
+
+double circle_circumference_area(double area)
+{
+    return 2 * sqrt(M_PI * area);
+}

@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: area-pentagon
+# key: area-pentagon
+# --
+static double area_pentagon(double side)
+{
+	return 0.25 * Math.Sqrt(5 * (5 + 2 * Math.Sqrt(5))) * Math.Pow(side, 2);
+}

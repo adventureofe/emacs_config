@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: area-hexagon
+# key: area-hexagon
+# --
+(defun area-hexagon (side)
+  (* (expt side 2) (/ (* 3 (sqrt 3)) 2)))

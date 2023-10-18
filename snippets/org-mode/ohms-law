@@ -1,0 +1,17 @@
+# -*- mode: snippet -*-
+# name: ohms-law
+# key: ohms-law
+# --
+#+BEGIN_SRC emacs-lisp
+;;(v)volts (i)amps (r)ohms
+(defun ohms-law (known_variables value1 value2)
+(cond ((equal known_variables "vr") (print "vr: finding i")(/ (float value1) (float value2)))
+      ((equal known_variables "rv") (print "rv: finding i")(/ (float value2) (float value1)))
+      ((equal known_variables "vi") (print "vi: finding r")(/ (float value1) (float value2)))
+      ((equal known_variables "iv") (print "iv: finding r")(/ (float value2) (float value1)))
+      ((equal known_variables "ir") (print "ir: finding v")(+ value1 value2))
+      ((equal known_variables "ri") (print "ri: finding v")(+ value1 value2))
+      (t (print "invalid variable type") 0)))
+
+(ohms-law "vr" 12 4)
+#+END_SRC

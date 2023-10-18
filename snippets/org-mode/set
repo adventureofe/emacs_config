@@ -1,0 +1,16 @@
+# -*- mode: snippet -*-
+# name:set
+# key:set
+# --
+set-complex-numbers
+set-natural-numbers
+set-rational-numbers
+set-integers
+set-real-numbers
+set-empty
+set-contains-as-member
+set-does-not-contain-as-member
+set-is-an-element-of
+set-is-not-an-element-of
+set-intersection
+set-union

@@ -1,0 +1,12 @@
+# -*- mode: snippet -*-
+# name: percent
+# key: percent
+# --
+(defun fraction-to-percent(numerator denominator)
+  (* numerator (/ 100.0 (float denominator))))
+
+(defun percent-of-number(percent number)
+(float (/ number (/ 100.0 percent))))
+
+(defun percent-off(number percent)
+(float (- number (percent-of-number percent number))))

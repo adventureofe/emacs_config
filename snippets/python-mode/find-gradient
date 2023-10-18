@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: find-gradient
+# key: find-gradient
+# --
+find_gradient = lambda x1, y1, x2, y2 : (y2 - y1) / (x2 - x1)

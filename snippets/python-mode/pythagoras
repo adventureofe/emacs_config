@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: pythagoras
+# key: pythagoras
+# --
+pythagoras_hypotenuse = lambda a, b : math.sqrt(pow(a, 2) + pow(b, 2))
+
+pythagoras_side = lambda hypotenuse, b : math.sqrt(pow(hypotenuse, 2) - pow(b, 2))

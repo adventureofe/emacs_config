@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: area-octagon
+# key: area-octagon
+# --
+const area_octagon = side => 2 * (1 + Math.sqrt(2)) * Math.pow(side, 2)

@@ -1,0 +1,10 @@
+# -*- mode: snippet -*-
+# name:operation
+# key:operation
+# --
+operation-multiply
+operation-divide
+operation-plus-minus
+operation-squared
+operation-cubed
+operation-square-root

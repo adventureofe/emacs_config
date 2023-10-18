@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: area-hexagon
+# key: area-hexagon
+# --
+area_hexagon :: Double -> Double
+area_hexagon side = side^2 * (3 * sqrt 3) / 2

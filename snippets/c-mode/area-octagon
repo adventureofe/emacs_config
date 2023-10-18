@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: area-octagon
+# key: area-octagon
+# --
+double area_octagon(double side)
+{
+    return 2 * (1 + sqrt(2)) * pow(side, 2);
+}

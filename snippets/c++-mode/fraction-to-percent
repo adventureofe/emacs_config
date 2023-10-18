@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: fraction-to-percent 
+# key:  fraction-to-percent
+# --
+double fraction_to_percent(double numerator, double denominator)
+{
+  return numerator * (100 / denominator);  
+}

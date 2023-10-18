@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: area-octagon
+# key: area-octagon
+# --
+(defn area-octagon
+  [side]
+  (* 2 (Math/pow side 2) (+ 1 (Math/sqrt 2))))

@@ -1,0 +1,15 @@
+# -*- mode: snippet -*-
+# name: main
+# key: main
+# --
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title> Start Page </title>
+        <meta charset="UTF=8">
+
+    </head>
+    <body>
+        Hello world
+    </body>
+</html>
