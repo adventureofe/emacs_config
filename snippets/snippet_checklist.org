@@ -1,0 +1,25 @@
+* c
+** TODO amdahls_law
+** SHAPES
+*** TODO triangle-r
+*** TODO triangle-s
+*** TODO trianglee-i
+*** TODO triangle-e
+*** TODO hexagon
+*** TODO octagon
+*** TODO pentagon
+*** TODO grid
+* cpp
+** TODO amdahls_law
+* python
+** DONE amdahls_law
+* web
+** TODO amdahls_law
+* clojure
+** TODO amdahls_law
+* lisp
+** TODO amdahls_law
+* ellisp
+** TODO amdahls_law
+* csharp
+** TODO amdahls_law

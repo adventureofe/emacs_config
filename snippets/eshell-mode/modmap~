@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: modmap 
+# key: modmp 
+# --
+(start-process-shell-command "xmodmap" nil "xmodmap ~/.config/emacs/Xmodmap")

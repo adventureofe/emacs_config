@@ -2,6 +2,8 @@
 # name: amdahls-law 
 # key: amdahls-law 
 # --
-amdahls_law_ratio = lambda p, s : 1 / (1 - p + p/s)
-amdahls_law_percentage = lambda p, s : 1 / (1 - (p/100) + (p/100)/s)
+
+# (FORMULA) S_latency(speedup) = 1 / ( (1 - proportion) + ( proportion / speedup ) )
+amdahls_law_ratio = lambda ratio, speedup : 1 / ( (1 - ratio) + (ratio / speedup))
+amdahls_law_percentage = lambda percentage, speedup : 1 / ( (1 - (percentage / 100) ) + ( (percentage / 100) / speedup) )
 
