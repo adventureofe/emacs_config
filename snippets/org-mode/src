@@ -1,7 +1,7 @@
 # -*- mode: snippet -*-
-# name: src
+# name: src 
 # key: src
 # --
-#+BEGIN_SRC emacs-lisp :tangle ./init.el
+#+BEGIN_SRC emacs-lisp
 $0
 #+END_SRC

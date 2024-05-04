@@ -1,0 +1,10 @@
+# -*- mode: snippet -*-
+# name: comment 
+# key: comment
+# --
+// c# comment
+
+/*
+multi line
+comment
+*/

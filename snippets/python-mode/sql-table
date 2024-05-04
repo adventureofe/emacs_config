@@ -1,0 +1,47 @@
+# -*- mode: snippet -*-
+# name: sql-table 
+# key: sql-table 
+# --
+import sys
+import sqlite3
+import pandas as pd
+
+
+from sql.import table_name_list
+
+def sql_table_drop(cursor, table_name): cursor.execute(f"DROP TABLE IF EXISTS {table_name}")
+
+def colour_create(connection, cursor):
+    # overwrite existing table if it already exists
+    sql_table_drop(cursor, "table_name")
+
+    # create table
+    cursor.execute('''CREATE TABLE table_name 
+(
+    id INTEGER PRIMARY KEY,
+    name TEXT NOT NULL,
+    r INTEGER NOT NULL CHECK(r >= 0 AND r <= 255),
+    g INTEGER NOT NULL CHECK(g >= 0 AND g <= 255),
+    b INTEGER NOT NULL CHECK(b >= 0 AND b <= 255)
+)''')
+
+    #insert values into table
+    cursor.executemany("INSERT INTO table_name(name, r, g, b) VALUES (?, ?, ?, ?)", list(table_name_list))
+
+    #overwrite existing table if it already exists
+    cursor.execute('DROP VIEW IF EXISTS vw_table_name')
+
+    #create view for table
+    cursor.execute('''
+    CREATE VIEW vw_table_name AS
+    SELECT
+        c.id AS id,
+        c.name AS name,
+        c.r AS r,
+        c.g AS g,
+        c.b AS b
+    FROM table_name AS c;
+''')
+
+    # make changes permanent
+    connection.commit()

@@ -7,37 +7,53 @@
 * TABLE OF CONTENTS                                                     :toc:
 - [[#startup][STARTUP]]
 - [[#elpaca][ELPACA]]
-- [[#absolute_essentials][ABSOLUTE_ESSENTIALS]]
-  - [[#evil][EVIL]]
+- [[#absolute_essentials_defaults][ABSOLUTE_ESSENTIALS_DEFAULTS]]
   - [[#make-esc-quit-prompts][MAKE ESC QUIT PROMPTS]]
-  - [[#theme][THEME]]
   - [[#zooming-in--out][ZOOMING IN / OUT]]
   - [[#disable-toolbars][DISABLE TOOLBARS]]
-  - [[#fancy_lambda_symbols_etc][FANCY_LAMBDA_SYMBOLS_ETC]]
-  - [[#conservative-scrolling][CONSERVATIVE SCROLLING]]
   - [[#inhibit_startup_guff][INHIBIT_STARTUP_GUFF]]
+  - [[#conservative-scrolling][CONSERVATIVE SCROLLING]]
+  - [[#fancy_lambda_symbols_etc][FANCY_LAMBDA_SYMBOLS_ETC]]
+  - [[#tab_width][TAB_WIDTH]]
+  - [[#visual_bell][VISUAL_BELL]]
+- [[#absolute_essentials_packages][ABSOLUTE_ESSENTIALS_PACKAGES]]
+  - [[#evil][EVIL]]
+  - [[#theme][THEME]]
   - [[#yasnippet][YASNIPPET]]
   - [[#evil_org][EVIL_ORG]]
   - [[#org_roam][ORG_ROAM]]
   - [[#doom-modeline][DOOM MODELINE]]
-  - [[#general][GENERAL]]
 - [[#exwm][EXWM]]
 - [[#which-key][WHICH-KEY]]
-- [[#inhibit_startup_guff-1][INHIBIT_STARTUP_GUFF]]
 - [[#org-mode][ORG MODE]]
   - [[#enable-table-of-contents][ENABLE TABLE OF CONTENTS]]
   - [[#org-bullets][ORG BULLETS]]
   - [[#disable-electric-indent][DISABLE ELECTRIC INDENT]]
-- [[#ivy-counsel][IVY (COUNSEL)]]
+  - [[#ivy-counsel][IVY (COUNSEL)]]
   - [[#counsel][COUNSEL]]
   - [[#ivy][IVY]]
   - [[#ivy-rich-all-the-icons][IVY RICH ALL THE ICONS]]
   - [[#ivy-rich][IVY RICH]]
+- [[#dap-mode][DAP MODE]]
 - [[#visuals][VISUALS]]
   - [[#rainbow-delimiters][RAINBOW DELIMITERS]]
   - [[#all-the-icons][ALL THE ICONS]]
-- [[#treemacs][TREEMACS]]
 - [[#eshell][ESHELL]]
+- [[#projectile][PROJECTILE]]
+- [[#sly][SLY]]
+- [[#backups][BACKUPS]]
+- [[#modes][MODES]]
+  - [[#utf][UTF]]
+  - [[#c][C]]
+- [[#emojify][EMOJIFY]]
+- [[#magit][MAGIT]]
+- [[#general][GENERAL]]
+- [[#corfu][CORFU]]
+- [[#lsp][LSP]]
+  - [[#lsp-mode][LSP MODE]]
+  - [[#pyright][pyright]]
+  - [[#c-1][C]]
+- [[#go-home][GO HOME]]
 
 * STARTUP
 #+BEGIN_SRC emacs-lisp
@@ -108,7 +124,52 @@
 ;;(use-package general :demand t)
 ;;(elpaca-wait)
 #+END_SRC
-* ABSOLUTE_ESSENTIALS
+* ABSOLUTE_ESSENTIALS_DEFAULTS
+** MAKE ESC QUIT PROMPTS
+#+BEGIN_SRC emacs-lisp
+;; Make ESC quit prompts
+(global-set-key (kbd "<escape>") 'keyboard-escape-quit)
+#+END_SRC
+** ZOOMING IN / OUT
+#+BEGIN_SRC emacs-lisp
+(global-set-key (kbd "C-=") 'text-scale-increase)
+(global-set-key (kbd "C--") 'text-scale-decrease)
+(global-set-key (kbd "<C-wheel-up>") 'text-scale-increase)
+(global-set-key (kbd "<C-wheel-down>") 'text-scale-decrease)
+#+END_SRC  
+** DISABLE TOOLBARS
+#+BEGIN_SRC emacs-lisp
+  (menu-bar-mode -1)
+  (tool-bar-mode -1)
+  (tooltip-mode -1)   
+  (scroll-bar-mode -1)
+  (set-window-scroll-bars (minibuffer-window) nil nil)
+#+END_SRC
+** INHIBIT_STARTUP_GUFF
+#+BEGIN_SRC emacs-lisp
+(setq inhibit-splash-screen t)
+(setq inhibit-startup-message t)
+#+END_SRC 
+** CONSERVATIVE SCROLLING
+#+BEGIN_SRC emacs-lisp
+(setq scroll-conservatively 100)
+#+END_SRC 
+** FANCY_LAMBDA_SYMBOLS_ETC
+#+BEGIN_SRC emacs-lisp
+(global-prettify-symbols-mode t)
+#+END_SRC
+** TAB_WIDTH
+#+BEGIN_SRC emacs-lisp
+(setq-default tab-width 4)
+
+;; treat camelcase as separate words
+(global-subword-mode 1)
+#+END_SRC
+** VISUAL_BELL
+#+BEGIN_SRC emacs-lisp
+(setq visible-bell t)
+#+END_SRC
+* ABSOLUTE_ESSENTIALS_PACKAGES
 I can't live without these. Putting these first in an attempt to have them load even if
 something crashes in the config
 ** EVIL
@@ -123,6 +184,7 @@ something crashes in the config
            (setq evil-want-C-i-jump nil)
           (evil-mode) 
     (define-key evil-insert-state-map (kbd "C-g") 'evil-normal-state))
+
        (use-package evil-collection
           :after evil
           :config
@@ -138,45 +200,10 @@ something crashes in the config
       ;; Don't install anything. Defer execution of BODY
       (elpaca nil (message "deferred"))
 #+END_SRC
-** MAKE ESC QUIT PROMPTS
-#+BEGIN_SRC emacs-lisp
-;; Make ESC quit prompts
-(global-set-key (kbd "<escape>") 'keyboard-escape-quit)
-#+END_SRC 
-
 ** THEME
 #+BEGIN_SRC emacs-lisp
-(use-package doom-themes
-  :init (load-theme 'doom-moonlight t))
-#+END_SRC 
-** ZOOMING IN / OUT
-#+BEGIN_SRC emacs-lisp
-(global-set-key (kbd "C-=") 'text-scale-increase)
-(global-set-key (kbd "C--") 'text-scale-decrease)
-(global-set-key (kbd "<C-wheel-up>") 'text-scale-increase)
-(global-set-key (kbd "<C-wheel-down>") 'text-scale-decrease)
-#+END_SRC 
-
-** DISABLE TOOLBARS
-#+BEGIN_SRC emacs-lisp
-  (menu-bar-mode -1)
-  (tool-bar-mode -1)
-  (tooltip-mode -1)   
-  (scroll-bar-mode -1)
-  (set-window-scroll-bars (minibuffer-window) nil nil)
-#+END_SRC
-** FANCY_LAMBDA_SYMBOLS_ETC
-#+BEGIN_SRC emacs-lisp
-(global-prettify-symbols-mode t)
-#+END_SRC
-** CONSERVATIVE SCROLLING
-#+BEGIN_SRC emacs-lisp
-(setq scroll-conservatively 100)
-#+END_SRC 
-** INHIBIT_STARTUP_GUFF
-#+BEGIN_SRC emacs-lisp
-(setq inhibit-splash-screen t)
-(setq inhibit-startup-message t)
+(use-package cyberpunk-theme
+  :init (load-theme 'cyberpunk t))
 #+END_SRC 
 ** YASNIPPET
 #+BEGIN_SRC emacs-lisp
@@ -221,94 +248,6 @@ something crashes in the config
     :ensure t
     :init (doom-modeline-mode 1)
     :custom ((doom-modeline-height 15)))
-#+END_SRC 
-
-** GENERAL
-*** GENERAL FUNCTIONS
-#+BEGIN_SRC emacs-lisp
-  (defun web-url(site) (browse-url-firefox  (concat (concat "https://www." site) ".com")))
-
-  (defun web-map(site) (browse-url-firefox (concat (concat "https://www.google.com/maps/@" site) "z?entry=ttu")))
-#+END_SRC
-*** GENERAL CODE
-#+BEGIN_SRC emacs-lisp
-    (use-package general
-	:config
-	(general-evil-setup)
-
-	;;setup up 'SPC' as global leader key
-	(general-create-definer frog/frogkey
-	    :states '(normal insert visual emacs)
-	    :keymaps 'override
-	    :prefix "SPC" ;; set leader
-	    :global-prefix "M-SPC") ;;access leader in insert mode
-
-	(frog/frogkey "c" '((lambda () (interactive) (find-file "~/.config/emacs/config.org")) :wk "config"))
-
-	(frog/frogkey
-	    "w" '(:ignore t :wk "web")
-		"w c" '(:ignore t: :wk "calculator")
-		    "w c g" '((lambda () (interactive) (browse-url-firefox "https://www.desmos.com/calculator")) :wk "GRAPH (Desmos)")
-		    "w c a" '((lambda () (interactive) (browse-url-firefox "https://www.mathpapa.com/algebra-calculator.html")) :wk "ALGEBRAIC (MathPapa)")
-		    "w c s" '((lambda () (interactive) (browse-url-firefox "https://www.desmos.com/scientific")) :wk "SCIENTIFIC (Desmos)")
-		    "w c d" '((lambda () (interactive) (browse-url-firefox "https://www.derivative-calculator.net/")) :wk "DERIVATIVE")
-		    "w c i" '((lambda () (interactive) (web_url "integral-calculator")) :wk "INTEGRAL")
-		"w s" '(:ignore t :wk "search")
-		    "w s b" '((lambda () (interactive)  (web-url "bing")) :wk "bing")
-		    "w s g" '((lambda () (interactive)  (web-url "google")) :wk "google")
-		    "w s y" '((lambda () (interactive)  (web-url "yahoo")) :wk "yahoo")
-		    "w s a" '((lambda () (interactive)  (web-url "ask")) :wk "ask")
-		    "w s w" '((lambda () (interactive)  (web-url "wolframalpha")) :wk "wolframalpha")
-		"w m" '(:ignore t :wk "map")
-		    "w m g" '((lambda () (interactive) (web-map "55.8497232,-4.2828747,11")) :wk "Glasgow")
-		    "w m l" '((lambda () (interactive) (web-map "51.4787528,-0.185164,10.29")) :wk "London")
-		    "w m d" '((lambda () (interactive) (web-map "54.9955762,-7.3196228,13.17")) :wk "Derry")
-		    "w m n" '((lambda () (interactive) (web-map "40.7940507,-73.9560524,11.04")) :wk "New York")
-		    "w m m" '((lambda () (interactive) (web-map "48.1110477,11.5731642,11.46")) :wk "Munich")
-		    "w m s" '((lambda () (interactive) (web-map" 30.8699794,121.0211044,8.87")) :wk "Shanghai")
-		    "w m k" '((lambda () (interactive) (web-map "22.5566423,88.3518627,11.29")) :wk "Kolkata")
-		    "w m r" '((lambda () (interactive) (web-map "41.8456475,12.512021,10.58")) :wk "Rome"))
-
-	(frog/frogkey
-	    "b" '(:ignore t :wk "BUFFER")
-		"b b" '(counsel-switch-buffer :wk "Switch buffer")
-		"b i" '(ibuffer :wk "Ibuffer")
-		"b k" '(kill-this-buffer :wk "Kill this buffer")
-		"b n" '(next-buffer :wk "Next buffer")
-		"b p" '(previous-buffer :wk "Previous buffer")
-		"b r" '(revert-buffer :wk "Reload buffer"))
-
-	(frog/frogkey
-	    "e" '(:ignore t :wk "EVALUATE")
-		"e b" '(eval-buffer :wk "evaluate elisp buffer")
-		"e d" '(eval-defun :wk "eval defun containng or after point")
-		"e e" '(eval-expression :wk "eval elisp expression")
-		"e l" '(eval-last-sexp :wk "eval elisp before point")
-		"e r" '(eval-region :wk "eval elisp in region"))
-
-	(frog/frogkey
-	    "h" '(:ignore t :wk "HELP")
-		"h f" '(describe-function :wk "describe function")
-		"h v" '(describe-variable :wk "describe variable")
-		"h u" '((lambda () (interactive) (load-file "~/.emacs.d/init.el")) :wk "Update Emacs init"))
-
-	(frog/frogkey
-	     "t" '(:ignore t :wk "TOGGLE")
-		"t n" '(display-line-numbers-mode :wk "Toggle line numbers")
-		"t l" '(visual-line-mode :wk "Toggle Truncated lines")
-		"t t" '(treemacs :wk "Toggle treemacs"))
-
-	 (frog/frogkey
-	     "n" '(:ignore t :wk "NAVIGATE")
-		"n c" '((lambda () (interactive) (find-file "~/.emacs.d/config.org")) :wk "config.org")
-		"n h" '((lambda () (interactive) (find-file "x:/projects/windows/home.org")) :wk "home.org"))
-
-	 (frog/frogkey
-	     "f" '(:ignore t :wk "FIND")
-		"f f" '(counsel-find-file :wk "find file")
-		"f s" '(sudo-edit-find-file :wk "sudo find file")
-		"f r" '(counsel-recentf :wk "find recent file"))
-  )
 #+END_SRC
 * EXWM
 #+BEGIN_SRC emacs-lisp
@@ -432,11 +371,6 @@ something crashes in the config
       which-key-allow-imprecise-window-fit t
       which-key-separator " → "))
 #+END_SRC
-* INHIBIT_STARTUP_GUFF
-#+BEGIN_SRC emacs-lisp
-(setq inhibit-splash-screen t)
-(setq inhibit-startup-message t)
-#+END_SRC 
 * ORG MODE
 ** ENABLE TABLE OF CONTENTS
 #+BEGIN_SRC emacs-lisp
@@ -458,7 +392,7 @@ something crashes in the config
 #+BEGIN_SRC emacs-lisp
 (electric-indent-mode -1)
 #+END_SRC 
-* IVY (COUNSEL)
+** IVY (COUNSEL)
 + Ivy, a generic completion mechanism for emacs
 + Counsel, a collection of Ivy-enhacned versions of common emacs commands
 + Ivy-rich allows us to add descriptions alongside the commnads in M-x
@@ -495,7 +429,14 @@ something crashes in the config
     :after (:all ivy counsel)
     :init (setq ivy-rich-parse-remote-file-path t)
     :config (ivy-rich-mode 1))
-#+END_SRC 
+#+END_SRC
+* DAP MODE
+#+BEGIN_SRC emacs-lisp
+;; optionally if you want to use debugger
+(use-package dap-mode)
+;; (use-package dap-LANGUAGE) to load the dap adapter for your language
+
+#+END_SRC
 * VISUALS
 ** RAINBOW DELIMITERS
 #+BEGIN_SRC emacs-lisp
@@ -513,11 +454,6 @@ This is an icon set that can be used with dired, ibuffer and other emacs program
 #+BEGIN_SRC emacs-lisp
 (use-package all-the-icons-dired
 :hook (dired-mode . (lambda () (all-the-icons-dired-mode t))))
-#+END_SRC 
-* TREEMACS
-#+BEGIN_SRC emacs-lisp
-  (use-package treemacs
-  :ensure t)
 #+END_SRC 
 * ESHELL
 #+BEGIN_SRC emacs-lisp
@@ -545,4 +481,233 @@ This is an icon set that can be used with dired, ibuffer and other emacs program
         eshell-scroll-to-bottom-on-input t
         eshell-destroy-buffer-when-process-dies t
         eshell-visual-commands'("bash" "fish" "htop" "ssh" "top" "zsh"))
+#+END_SRC
+* PROJECTILE
+#+BEGIN_SRC emacs-lisp
+(use-package projectile
+  :defer t
+  :ensure t
+  ;; :delight '(:eval (concat " " (projectile-project-name)))
+  :delight
+  :custom
+  (projectile-project-search-path '("~/"))
+  (projectile-indexing-method 'alien)
+  (projectile-enable-caching t)
+  (projectile-completion-system 'ivy))
+
+(use-package counsel-projectile
+  :defer t
+  :ensure t
+  :config
+  (add-to-list 'ivy-initial-inputs-alist '(counsel-projectile-switch-project . ""))
+  (counsel-projectile-mode 1)
+  ;; :bind-keymap ("M-s p" . projectile-command-map)
+  :bind (("M-s b" . counsel-projectile-switch-to-buffer)
+         ("M-s d" . counsel-projectile-find-dir)
+         ("M-s p" . (lambda ()
+                      (interactive)
+                      (counsel-projectile-switch-project 4)))))
+#+END_SRC
+* SLY
+#+BEGIN_SRC emacs-lisp
+  (use-package sly)
+#+END_SRC
+* BACKUPS
+#+BEGIN_SRC emacs-lisp
+  (setq backup-directory-alist '(("." . "~/MyEmacsBackups")))
+#+END_SRC
+* MODES
+** UTF
+#+BEGIN_SRC emacs-lisp
+(setq locale-coding-system 'utf-8)
+(set-terminal-coding-system 'utf-8)
+(set-keyboard-coding-system 'utf-8)
+(set-selection-coding-system 'utf-8)
+(prefer-coding-system 'utf-8)
+#+END_SRC
+** C
+#+BEGIN_SRC emacs-lisp
+(setq c-default-style "bsd"
+      c-basic-offset 4)
+#+END_SRC
+* EMOJIFY
+#+BEGIN_SRC emacs-lisp
+(use-package emojify)
+#+END_SRC
+* MAGIT
+#+BEGIN_SRC emacs-lisp
+  (use-package magit
+    :bind ("C-x g" . magit-status))
+#+END_SRC
+* GENERAL
+*** GENERAL FUNCTIONS
+#+BEGIN_SRC emacs-lisp
+  (defun web-url(site) (browse-url-firefox  (concat (concat "https://www." site) ".com")))
+  (defun web(url) (lambda () (interactive) (browse-url-firefox url)))
+
+  (defun web-map(site) (browse-url-firefox (concat (concat "https://www.google.com/maps/@" site) "z?entry=ttu")))
+#+END_SRC
+*** GENERAL CODE
+#+BEGIN_SRC emacs-lisp
+    (use-package general
+        :config
+        (general-evil-setup)
+
+        ;;setup up 'SPC' as global leader key
+        (general-create-definer frog/frogkey
+            :states '(normal insert visual emacs)
+            :keymaps 'override
+            :prefix "SPC" ;; set leader
+            :global-prefix "M-SPC") ;;access leader in insert mode
+
+        (frog/frogkey
+            "w" '(:ignore t :wk "web")
+                "w c" '(:ignore t: :wk "calculators")
+                    "w c g" '((lambda () (interactive) (browse-url-firefox "https://www.desmos.com/calculator")) :wk "GRAPH (Desmos)")
+                    "w c a" '((lambda () (interactive) (browse-url-firefox "https://www.mathpapa.com/algebra-calculator.html")) :wk "ALGEBRAIC (MathPapa)")
+                    "w c s" '((lambda () (interactive) (browse-url-firefox "https://www.desmos.com/scientific")) :wk "SCIENTIFIC (Desmos)")
+                    "w c d" '((lambda () (interactive) (browse-url-firefox "https://www.derivative-calculator.net/")) :wk "DERIVATIVE")
+                    "w c i" '((lambda () (interactive) (web-url "integral-calculator")) :wk "INTEGRAL")
+                    "w c u" '((lambda () (interactive) (web-url "calculatorsoup")) :wk "CALCULATORSOUP")
+                "w s" '(:ignore t :wk "search (SEARCH ENGINES)")
+                    "w s b" '((lambda () (interactive)  (web-url "bing")) :wk "bing")
+                    "w s g" '((lambda () (interactive)  (web-url "google")) :wk "google")
+                    "w s y" '((lambda () (interactive)  (web-url "yahoo")) :wk "yahoo")
+                    "w s a" '((lambda () (interactive)  (web-url "ask")) :wk "ask")
+                    "w s w" '((lambda () (interactive)  (web-url "wolframalpha")) :wk "wolframalpha")
+                "w m" '(:ignore t :wk "map (GOOGLE MAPS)")
+                    "w m g" '((lambda () (interactive) (web-map "55.8497232,-4.2828747,11")) :wk "Glasgow")
+                    "w m l" '((lambda () (interactive) (web-map "51.4787528,-0.185164,10.29")) :wk "London")
+                    "w m d" '((lambda () (interactive) (web-map "54.9955762,-7.3196228,13.17")) :wk "Derry")
+                    "w m n" '((lambda () (interactive) (web-map "40.7940507,-73.9560524,11.04")) :wk "New York")
+                    "w m m" '((lambda () (interactive) (web-map "48.1110477,11.5731642,11.46")) :wk "Munich")
+                    "w m s" '((lambda () (interactive) (web-map" 30.8699794,121.0211044,8.87")) :wk "Shanghai")
+                    "w m k" '((lambda () (interactive) (web-map "22.5566423,88.3518627,11.29")) :wk "Kolkata")
+                    "w m r" '((lambda () (interactive) (web-map "41.8456475,12.512021,10.58")) :wk "Rome"))
+
+        (frog/frogkey
+            "e" '(:ignore t :wk "EVALUATE")
+                "e b" '(eval-buffer :wk "evaluate elisp buffer")
+                "e d" '(eval-defun :wk "eval defun containng or after point")
+                "e e" '(eval-expression :wk "eval elisp expression")
+                "e l" '(eval-last-sexp :wk "eval elisp before point")
+                "e r" '(eval-region :wk "eval elisp in region"))
+
+        (frog/frogkey
+            "z" '(:ignore t :wk "HELP")
+                "z f" '(describe-function :wk "describe function")
+                "z v" '(describe-variable :wk "describe variable")
+                "z u" '((lambda () (interactive) (load-file "~/.emacs.d/init.el")) :wk "Update Emacs init"))
+
+        (frog/frogkey
+             "t" '(:ignore t :wk "TOGGLE")
+                "t n" '(display-line-numbers-mode :wk "Toggle line numbers")
+                "t l" '(visual-line-mode :wk "Toggle Truncated lines")
+                "t t" '(treemacs :wk "Toggle treemacs"))
+
+         (frog/frogkey
+             "f" '(:ignore t :wk "FIND FILE")
+                "f f" '(counsel-find-file :wk "find file")
+                "f s" '(sudo-edit-find-file :wk "sudo find file")
+                "f c" '((lambda () (interactive) (find-file "/home/frog/.config/emacs/config.org")) :wk "config.org")
+                "f p" '((lambda () (interactive) (find-file "/home/frog/public/script_writing/python/snippets.py")) :wk "snippets.py")
+                "f t" '((lambda () (interactive) (find-file "/home/frog/public/taverner/python/main.py")) :wk "taverner main.py")
+                "f h" '((lambda () (interactive) (find-file "/home/frog/RoamNotes/20231023040741-home.org")) :wk "home.org")
+                "f r" '(counsel-recentf :wk "find recent file"))
+  )
+#+END_SRC
+* CORFU
+#+BEGIN_SRC emacs-lisp
+;;; Code Completion
+(use-package corfu
+  :disabled t
+  :ensure t
+  ;; Optional customizations
+  :custom
+  (corfu-cycle t)                 ; Allows cycling through candidates
+  (corfu-auto t)                  ; Enable auto completion
+  (corfu-auto-prefix 2)
+  (corfu-auto-delay 0.8)
+  (corfu-popupinfo-delay '(0.5 . 0.2))
+  (corfu-preview-current 'insert) ; insert previewed candidate
+  (corfu-preselect 'prompt)
+  (corfu-on-exact-match nil)      ; Don't auto expand tempel snippets
+  ;; Optionally use TAB for cycling, default is `corfu-complete'.
+  :bind (:map corfu-map
+              ("M-SPC"      . corfu-insert-separator)
+              ("TAB"        . corfu-next)
+              ([tab]        . corfu-next)
+              ("S-TAB"      . corfu-previous)
+              ([backtab]    . corfu-previous)
+              ("S-<return>" . corfu-insert)
+              ("RET"        . nil))
+
+  :init
+  (global-corfu-mode)
+  (corfu-history-mode)
+  (corfu-popupinfo-mode) ; Popup completion info
+  :config
+  (add-hook 'eshell-mode-hook
+            (lambda () (setq-local corfu-quit-at-boundary t
+                                   corfu-quit-no-match t
+                                   corfu-auto nil)
+              (corfu-mode))
+            nil
+            t))
+(use-package cape
+  :ensure t
+  :defer 10
+  :bind ("C-c f" . cape-file)
+  :init
+  ;; Add `completion-at-point-functions', used by `completion-at-point'.
+  (defun my/add-shell-completion ()
+    (interactive)
+    (cl-pushnew #'cape-history completion-at-point-functions)
+    (cl-pushnew #'pcomplete-completions-at-point completion-at-point-functions))
+  (add-hook 'shell-mode-hook #'my/add-shell-completion nil t)
+
+  :config
+  ;; Silence then pcomplete capf, no errors or messages!
+  (advice-add 'pcomplete-completions-at-point :around #'cape-wrap-silent)
+
+  ;; Ensure that pcomplete does not write to the buffer
+  ;; and behaves as a pure `completion-at-point-function'.
+  (advice-add 'pcomplete-completions-at-point :around #'cape-wrap-purify))
+#+END_SRC
+* LSP
+** LSP MODE
+#+BEGIN_SRC emacs-lisp
+(use-package lsp-mode
+  :init
+  ;; set prefix for lsp-command-keymap (few alternatives - "C-l", "C-c l")
+  (setq lsp-keymap-prefix "C-c l")
+  :hook (;; replace XXX-mode with concrete major-mode(e. g. python-mode)
+         (XXX-mode . lsp)
+         ;; if you want which-key integration
+         (lsp-mode . lsp-enable-which-key-integration))
+  :commands lsp)
+
+;; optionally
+(use-package lsp-ui :commands lsp-ui-mode)
+;; if you are ivy user
+(use-package lsp-ivy :commands lsp-ivy-workspace-symbol)
+#+END_SRC
+** pyright
+#+BEGIN_SRC emacs-lisp
+  (use-package lsp-pyright
+    :ensure t
+    :hook (python-mode . (lambda ()
+                           (require 'lsp-pyright)
+                           (lsp))))
+#+END_SRC
+** C
+#+BEGIN_SRC emacs-lisp
+(add-hook 'c-mode-hook 'lsp)
+(add-hook 'c++-mode-hook 'lsp)
+
+(add-hook 'eglot-managed-mode-hook (lambda () (flymake-mode -1))) ; Disable flymake in eglot
+#+END_SRC
+* GO HOME
+#+BEGIN_SRC emacs-lisp
+;; (find-file "/home/frog/RoamNotes/20231023040741-home.org")
 #+END_SRC
