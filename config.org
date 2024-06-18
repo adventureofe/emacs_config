@@ -2,58 +2,6 @@
 #+AUTHOR: AdventureOfE
 #+DESCRIPTION: frogmacs config
 #+STARTUP: overview
-#+OPTIONS: toc:2
-
-* TABLE OF CONTENTS                                                     :toc:
-- [[#startup][STARTUP]]
-- [[#elpaca][ELPACA]]
-- [[#absolute_essentials_defaults][ABSOLUTE_ESSENTIALS_DEFAULTS]]
-  - [[#make-esc-quit-prompts][MAKE ESC QUIT PROMPTS]]
-  - [[#zooming-in--out][ZOOMING IN / OUT]]
-  - [[#disable-toolbars][DISABLE TOOLBARS]]
-  - [[#inhibit_startup_guff][INHIBIT_STARTUP_GUFF]]
-  - [[#conservative-scrolling][CONSERVATIVE SCROLLING]]
-  - [[#fancy_lambda_symbols_etc][FANCY_LAMBDA_SYMBOLS_ETC]]
-  - [[#tab_width][TAB_WIDTH]]
-  - [[#visual_bell][VISUAL_BELL]]
-- [[#absolute_essentials_packages][ABSOLUTE_ESSENTIALS_PACKAGES]]
-  - [[#evil][EVIL]]
-  - [[#theme][THEME]]
-  - [[#yasnippet][YASNIPPET]]
-  - [[#evil_org][EVIL_ORG]]
-  - [[#org_roam][ORG_ROAM]]
-  - [[#doom-modeline][DOOM MODELINE]]
-- [[#exwm][EXWM]]
-- [[#which-key][WHICH-KEY]]
-- [[#org-mode][ORG MODE]]
-  - [[#enable-table-of-contents][ENABLE TABLE OF CONTENTS]]
-  - [[#org-bullets][ORG BULLETS]]
-  - [[#disable-electric-indent][DISABLE ELECTRIC INDENT]]
-  - [[#ivy-counsel][IVY (COUNSEL)]]
-  - [[#counsel][COUNSEL]]
-  - [[#ivy][IVY]]
-  - [[#ivy-rich-all-the-icons][IVY RICH ALL THE ICONS]]
-  - [[#ivy-rich][IVY RICH]]
-- [[#dap-mode][DAP MODE]]
-- [[#visuals][VISUALS]]
-  - [[#rainbow-delimiters][RAINBOW DELIMITERS]]
-  - [[#all-the-icons][ALL THE ICONS]]
-- [[#eshell][ESHELL]]
-- [[#projectile][PROJECTILE]]
-- [[#sly][SLY]]
-- [[#backups][BACKUPS]]
-- [[#modes][MODES]]
-  - [[#utf][UTF]]
-  - [[#c][C]]
-- [[#emojify][EMOJIFY]]
-- [[#magit][MAGIT]]
-- [[#general][GENERAL]]
-- [[#corfu][CORFU]]
-- [[#lsp][LSP]]
-  - [[#lsp-mode][LSP MODE]]
-  - [[#pyright][pyright]]
-  - [[#c-1][C]]
-- [[#go-home][GO HOME]]
 
 * STARTUP
 #+BEGIN_SRC emacs-lisp
@@ -69,60 +17,49 @@
 #+END_SRC
 * ELPACA
 #+BEGIN_SRC emacs-lisp
-    (defvar elpaca-installer-version 0.5)
-    (defvar elpaca-directory (expand-file-name "elpaca/" user-emacs-directory))
-    (defvar elpaca-builds-directory (expand-file-name "builds/" elpaca-directory))
-    (defvar elpaca-repos-directory (expand-file-name "repos/" elpaca-directory))
-    (defvar elpaca-order '(elpaca :repo "https://github.com/progfolio/elpaca.git"
-				  :ref nil
-				  :files (:defaults (:exclude "extensions"))
-				  :build (:not elpaca--activate-package)))
-    (let* ((repo  (expand-file-name "elpaca/" elpaca-repos-directory))
-	   (build (expand-file-name "elpaca/" elpaca-builds-directory))
-	   (order (cdr elpaca-order))
-	   (default-directory repo))
-      (add-to-list 'load-path (if (file-exists-p build) build repo))
-      (unless (file-exists-p repo)
-	(make-directory repo t)
-	(when (< emacs-major-version 28) (require 'subr-x))
-	(condition-case-unless-debug err
-	    (if-let ((buffer (pop-to-buffer-same-window "*elpaca-bootstrap*"))
-		     ((zerop (call-process "git" nil buffer t "clone"
-					   (plist-get order :repo) repo)))
-		     ((zerop (call-process "git" nil buffer t "checkout"
-					   (or (plist-get order :ref) "--"))))
-		     (emacs (concat invocation-directory invocation-name))
-		     ((zerop (call-process emacs nil buffer nil "-Q" "-L" "." "--batch"
-					   "--eval" "(byte-recompile-directory \".\" 0 'force)")))
-		     ((require 'elpaca))
-		     ((elpaca-generate-autoloads "elpaca" repo)))
-		(progn (message "%s" (buffer-string)) (kill-buffer buffer))
-	      (error "%s" (with-current-buffer buffer (buffer-string))))
-	  ((error) (warn "%s" err) (delete-directory repo 'recursive))))
-      (unless (require 'elpaca-autoloads nil t)
-	(require 'elpaca)
-	(elpaca-generate-autoloads "elpaca" repo)
-	(load "./elpaca-autoloads")))
-    (add-hook 'after-init-hook #'elpaca-process-queues)
-    (elpaca `(,@elpaca-order))
-  (elpaca-no-symlink-mode)
+  (defvar elpaca-installer-version 0.7)
+  (defvar elpaca-directory (expand-file-name "elpaca/" user-emacs-directory))
+  (defvar elpaca-builds-directory (expand-file-name "builds/" elpaca-directory))
+  (defvar elpaca-repos-directory (expand-file-name "repos/" elpaca-directory))
+  (defvar elpaca-order '(elpaca :repo "https://github.com/progfolio/elpaca.git"
+								:ref nil :depth 1
+								:files (:defaults "elpaca-test.el" (:exclude "extensions"))
+								:build (:not elpaca--activate-package)))
+  (let* ((repo  (expand-file-name "elpaca/" elpaca-repos-directory))
+		 (build (expand-file-name "elpaca/" elpaca-builds-directory))
+		 (order (cdr elpaca-order))
+		 (default-directory repo))
+	(add-to-list 'load-path (if (file-exists-p build) build repo))
+	(unless (file-exists-p repo)
+	  (make-directory repo t)
+	  (when (< emacs-major-version 28) (require 'subr-x))
+	  (condition-case-unless-debug err
+		  (if-let ((buffer (pop-to-buffer-same-window "*elpaca-bootstrap*"))
+				   ((zerop (apply #'call-process `("git" nil ,buffer t "clone"
+												   ,@(when-let ((depth (plist-get order :depth)))
+													   (list (format "--depth=%d" depth) "--no-single-branch"))
+												   ,(plist-get order :repo) ,repo))))
+				   ((zerop (call-process "git" nil buffer t "checkout"
+										 (or (plist-get order :ref) "--"))))
+				   (emacs (concat invocation-directory invocation-name))
+				   ((zerop (call-process emacs nil buffer nil "-Q" "-L" "." "--batch"
+										 "--eval" "(byte-recompile-directory \".\" 0 'force)")))
+				   ((require 'elpaca))
+				   ((elpaca-generate-autoloads "elpaca" repo)))
+			  (progn (message "%s" (buffer-string)) (kill-buffer buffer))
+			(error "%s" (with-current-buffer buffer (buffer-string))))
+		((error) (warn "%s" err) (delete-directory repo 'recursive))))
+	(unless (require 'elpaca-autoloads nil t)
+	  (require 'elpaca)
+	  (elpaca-generate-autoloads "elpaca" repo)
+	  (load "./elpaca-autoloads")))
+  (add-hook 'after-init-hook #'elpaca-process-queues)
+  (elpaca `(,@elpaca-order))
 
-    ;; Install use-package support
+ ;; Install use-package support
 (elpaca elpaca-use-package
-  ;; Enable :elpaca use-package keyword.
-  (elpaca-use-package-mode)
-  ;; Assume :elpaca t unless otherwise specified.
-  (setq elpaca-use-package-by-default t))
-
-;; Block until current queue processed.
-(elpaca-wait)
-
-;;When installing a package which modifies a form used at the top-level
-;;(e.g. a package which adds a use-package key word),
-;;use `elpaca-wait' to block until that package has been installed/configured.
-;;For example:
-;;(use-package general :demand t)
-;;(elpaca-wait)
+  ;; Enable use-package :ensure support for Elpaca.
+  (elpaca-use-package-mode)) 
 #+END_SRC
 * ABSOLUTE_ESSENTIALS_DEFAULTS
 ** MAKE ESC QUIT PROMPTS
@@ -169,545 +106,144 @@
 #+BEGIN_SRC emacs-lisp
 (setq visible-bell t)
 #+END_SRC
+** TEMPORARY_THEME
+#+BEGIN_SRC emacs-lisp
+(load-theme 'manoj-dark)
+#+END_SRC
+* EXWM
+#+BEGIN_SRC emacs-lisp
+  (defun efs/run-in-background (command)
+	  (let ((command-parts (split-string command "[ ]+")))
+		  (apply #'call-process `(,(car command-parts) nil 0 nil ,@(cdr command-parts)))))
+
+  (defun efs/exwm-update-class ()
+	  (exwm-workspace-rename-buffer exwm-class-name))
+
+  (defun efs/exwm-update-title ()
+	  (pcase exwm-class-name
+		  ("Firefox" (exwm-workspace-rename-buffer (format "Firefox: %s" exwm-title)))))
+
+  (defun dw/exwm-init-hook ()
+	  ;; Make workspace 1 be the one where we land at startup
+	  (exwm-workspace-switch-create 1))
+
+   (defun efs/configure-window-by-class ()
+	   (interactive)
+	   (pcase exwm-class-name
+		  ("Firefox" (exwm-workspace-move-window 2))
+		  ("Sol" (exwm-workspace-move-window 3))
+		  ("mpv" (exwm-floating-toggle-floating)
+		  (exwm-layout-toggle-mode-line))))
+
+	;; This function should be used only after configuring autorandr!
+	(defun efs/update-displays ()
+		(efs/run-in-background "autorandr --change --force")
+		(efs/set-wallpaper)
+		(message "Display config: %s"
+			(string-trim (shell-command-to-string "autorandr --current"))))
+
+	(use-package exwm
+	    :ensure t
+	    :demand t
+		:config
+		(setq exwm-workspace-number 4)
+
+		;; When window "class" updates, use it to set the buffer name
+		(add-hook 'exwm-update-class-hook #'efs/exwm-update-class)
+
+		;; When window title updates, use it to set the buffer name
+		(add-hook 'exwm-update-title-hook #'efs/exwm-update-title)
+
+		;; Configure windows as they're created
+		(add-hook 'exwm-manage-finish-hook #'efs/configure-window-by-class)
+
+		(setq exwm-input-prefixkeys
+			'(?\C-x
+			?\C-u
+			?\C-h
+			?\M-x
+			?\M-`
+			?\M-&
+			?\M-:
+			?\C-\M-j
+			?\C-\ ))
+
+		;;ctrl + q will enable the next key to be sent directly
+		(define-key exwm-mode-map [?\C-q] 'exwm-input-send-next-key)
+
+		(require 'exwm-randr)
+		;; set workspaces to different screens
+		(setq exwm-randr-workspace-monitor-plist '(1 "DVI-D-0"))
+		(add-hook 'exwm-randr-screen-change-hook
+			(lambda ()
+				(start-process-shell-command "xrandr" nil "xrandr --output DVI-D-0 --left-of --output HDMI-0 --auto")))		
+		(exwm-randr-enable)
+
+
+		;; set workspaces to different screens
+		(setq exwm-randr-workspace-monitor-plist '(2 "HDMI-0" 3 "HDMI-0"))
+
+		;; Rebind CapsLock to Ctrl
+		(start-process-shell-command "xmodmap" nil "xmodmap ~/.config/emacs/Xmodmap")
+
+
+		;; Load the system tray before exwm-init
+		(require 'exwm-systemtray)
+		(setq exwm-systemtray-height 32)
+		(exwm-systemtray-enable)
+
+		(setq exwm-input-global-keys
+			`(
+				([?\s-r] . exwm-reset)
+				([s-left] . windmove-left)
+				([s-right]. windmove-right)
+				([?\s-w] . exwm-workspace-switch)
+				([?\s-&] . (lambda (command)
+					(interactive (list (read-shell-command "$ ")))
+					(start-process-shell-command command nil command)))
+
+				;; Switch workspace
+				([?\s-w] . exwm-workspace-switch)
+
+				;; 's-N': Switch to certain workspace with Super (Win) plus a number key (0 - 9)
+				,@(mapcar (lambda (i)
+					`(,(kbd (format "s-%d" i)) .
+						(lambda ()
+							(interactive)
+							(exwm-workspace-switch-create ,i))))
+					(number-sequence 0 9))))
+
+		(exwm-enable))
+#+END_SRC
 * ABSOLUTE_ESSENTIALS_PACKAGES
 I can't live without these. Putting these first in an attempt to have them load even if
 something crashes in the config
 ** EVIL
 #+BEGIN_SRC emacs-lisp
-      ;; Expands to: (elpaca evil (use-package evil :demand t))
-      (use-package evil
-        :init ;;tweak evil's config before loading
-          (setq evil-want-integration t) ;; this is optional since already set to true
-          (setq evil-want-keybinding nil)
-          (setq evil-vsplit-window-right t)
-          (setq evil-split-window-below t)
-           (setq evil-want-C-i-jump nil)
-          (evil-mode) 
-    (define-key evil-insert-state-map (kbd "C-g") 'evil-normal-state))
+	;; Expands to: (elpaca evil (use-package evil :demand t))
+	(use-package evil
+	  :ensure t
+	  :demand t
+	  :init ;;tweak evil's config before loading
+		(setq evil-want-integration t) ;; this is optional since already set to true
+		(setq evil-want-keybinding nil)
+		(setq evil-vsplit-window-right t)
+		(setq evil-split-window-below t)
+		 (setq evil-want-C-i-jump nil)
+		(evil-mode) 
+  (define-key evil-insert-state-map (kbd "C-g") 'evil-normal-state))
 
-       (use-package evil-collection
-          :after evil
-          :config
-          (setq evil-collection-mode-list '(dashboard dired ibuffer))
-          (evil-collection-init))
-       (use-package evil-tutor)
+	 (use-package evil-collection
+		:ensure t
+		:demand t
+		:after evil
+		:config
+		(setq evil-collection-mode-list '(dashboard dired ibuffer))
+		(evil-collection-init))
 
-      ;;Turns off elpaca-use-package-mode current declartion
-      ;;Note this will cause the declaration to be interpreted immediately (not deferred).
-      ;;Useful for configuring built-in emacs features.
-      (use-package emacs :elpaca nil :config (setq ring-bell-function #'ignore))
-
-      ;; Don't install anything. Defer execution of BODY
-      (elpaca nil (message "deferred"))
-#+END_SRC
-** THEME
-#+BEGIN_SRC emacs-lisp
-(use-package cyberpunk-theme
-  :init (load-theme 'cyberpunk t))
-#+END_SRC 
-** YASNIPPET
-#+BEGIN_SRC emacs-lisp
-(use-package yasnippet
-  :ensure t
-  :config
-  (yas-global-mode 1))
-#+END_SRC
-
-** EVIL_ORG
-#+BEGIN_SRC emacs-lisp
-  (use-package evil-org
-    :ensure t
-    :after org
-    :hook (org-mode . (lambda () evil-org-mode))
-    :config
-    (require 'evil-org-agenda)
-    (evil-org-agenda-set-keys))
-#+END_SRC
-
-** ORG_ROAM
-#+BEGIN_SRC emacs-lisp
-(use-package org-roam
-  :ensure t
-  :init
-  (setq org-roam-v2-ack t)
-  :custom
-  (org-roam-directory "~/RoamNotes")
-  (org-roam-completion-everywhere t)
-  :bind (("C-c n l" . org-roam-buffer-toggle)
-         ("C-c n f" . org-roam-node-find)
-         ("C-c n i" . org-roam-node-insert)
-         :map org-mode-map
-         ("C-M-i"    . completion-at-point))
-  :config
-  (org-roam-setup))
-#+END_SRC 
-
-** DOOM MODELINE
-#+BEGIN_SRC emacs-lisp
-  (use-package doom-modeline
-    :ensure t
-    :init (doom-modeline-mode 1)
-    :custom ((doom-modeline-height 15)))
-#+END_SRC
-* EXWM
-#+BEGIN_SRC emacs-lisp
-  (defun efs/run-in-background (command)
-      (let ((command-parts (split-string command "[ ]+")))
-          (apply #'call-process `(,(car command-parts) nil 0 nil ,@(cdr command-parts)))))
-
-  (defun efs/exwm-update-class ()
-      (exwm-workspace-rename-buffer exwm-class-name))
-
-  (defun efs/exwm-update-title ()
-      (pcase exwm-class-name
-          ("Firefox" (exwm-workspace-rename-buffer (format "Firefox: %s" exwm-title)))))
-
-  (defun dw/exwm-init-hook ()
-      ;; Make workspace 1 be the one where we land at startup
-      (exwm-workspace-switch-create 1))
-
-   (defun efs/configure-window-by-class ()
-       (interactive)
-       (pcase exwm-class-name
-          ("Firefox" (exwm-workspace-move-window 2))
-          ("Sol" (exwm-workspace-move-window 3))
-          ("mpv" (exwm-floating-toggle-floating)
-          (exwm-layout-toggle-mode-line))))
-
-    ;; This function should be used only after configuring autorandr!
-    (defun efs/update-displays ()
-        (efs/run-in-background "autorandr --change --force")
-        (efs/set-wallpaper)
-        (message "Display config: %s"
-            (string-trim (shell-command-to-string "autorandr --current"))))
-
-    (use-package exwm
-        :config
-        (setq exwm-workspace-number 4)
-
-        ;; When window "class" updates, use it to set the buffer name
-        (add-hook 'exwm-update-class-hook #'efs/exwm-update-class)
-
-        ;; When window title updates, use it to set the buffer name
-        (add-hook 'exwm-update-title-hook #'efs/exwm-update-title)
-
-        ;; Configure windows as they're created
-        (add-hook 'exwm-manage-finish-hook #'efs/configure-window-by-class)
-
-        (setq exwm-input-prefixkeys
-            '(?\C-x
-            ?\C-u
-            ?\C-h
-            ?\M-x
-            ?\M-`
-            ?\M-&
-            ?\M-:
-            ?\C-\M-j
-            ?\C-\ ))
-
-        ;;ctrl + q will enable the next key to be sent directly
-        (define-key exwm-mode-map [?\C-q] 'exwm-input-send-next-key)
-
-        (require 'exwm-randr)
-        ;; set workspaces to different screens
-        (setq exwm-randr-workspace-monitor-plist '(1 "DVI-D-0"))
-        (add-hook 'exwm-randr-screen-change-hook
-            (lambda ()
-                (start-process-shell-command "xrandr" nil "xrandr --output DVI-D-0 --left-of --output HDMI-0 --auto")))		
-        (exwm-randr-enable)
-
-
-        ;; set workspaces to different screens
-        (setq exwm-randr-workspace-monitor-plist '(2 "HDMI-0" 3 "HDMI-0"))
-
-        ;; Rebind CapsLock to Ctrl
-        (start-process-shell-command "xmodmap" nil "xmodmap ~/.config/emacs/Xmodmap")
-
-
-        ;; Load the system tray before exwm-init
-        (require 'exwm-systemtray)
-        (setq exwm-systemtray-height 32)
-        (exwm-systemtray-enable)
-
-        (setq exwm-input-global-keys
-            `(
-                ([?\s-r] . exwm-reset)
-                ([s-left] . windmove-left)
-                ([s-right]. windmove-right)
-                ([?\s-w] . exwm-workspace-switch)
-                ([?\s-&] . (lambda (command)
-                    (interactive (list (read-shell-command "$ ")))
-                    (start-process-shell-command command nil command)))
-
-                ;; Switch workspace
-                ([?\s-w] . exwm-workspace-switch)
-
-                ;; 's-N': Switch to certain workspace with Super (Win) plus a number key (0 - 9)
-                ,@(mapcar (lambda (i)
-                    `(,(kbd (format "s-%d" i)) .
-                        (lambda ()
-                            (interactive)
-                            (exwm-workspace-switch-create ,i))))
-                    (number-sequence 0 9))))
-
-        (exwm-enable))
-#+END_SRC
-* WHICH-KEY
-#+BEGIN_SRC emacs-lisp
-  (use-package which-key
-      :init
-      (which-key-mode 1)
-      :config
-      (setq which-key-side-window-location 'bottom
-      which-key-sort-order #'which-key-key-order-alpha
-      which-key-sort-uppercase-first nil
-      which-key-add-column-padding 1
-      which-key-max-display-columns nil
-      which-key-min-display-lines 6
-      which-key-side-window-slot -10
-      which-key-side-window-max-height 0.25
-      which-key-idle-delay 0
-      which-key-max-description-length 70
-      which-key-allow-imprecise-window-fit t
-      which-key-separator " → "))
-#+END_SRC
-* ORG MODE
-** ENABLE TABLE OF CONTENTS
-#+BEGIN_SRC emacs-lisp
-  (use-package toc-org
-    :commands toc-org-enable
-    :init (add-hook 'org-mode-hook 'toc-org-enable))
-#+END_SRC
-** ORG BULLETS
-#+BEGIN_SRC emacs-lisp
-  (add-hook 'org-mode-hook 'org-indent-mode)
-  (use-package org-bullets
-  :after org
-  :hook (org-mode . org-bullets-mode)
-  :custom
-  (org-bullets-bullet-list '("◉" "○" "●" "○" "●" "○" "●"))
-  (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
-#+END_SRC 
-** DISABLE ELECTRIC INDENT
-#+BEGIN_SRC emacs-lisp
-(electric-indent-mode -1)
-#+END_SRC 
-** IVY (COUNSEL)
-+ Ivy, a generic completion mechanism for emacs
-+ Counsel, a collection of Ivy-enhacned versions of common emacs commands
-+ Ivy-rich allows us to add descriptions alongside the commnads in M-x
-** COUNSEL
-#+BEGIN_SRC emacs-lisp
-    (use-package counsel
-  :after ivy
-  :config (counsel-mode))
-#+END_SRC
-** IVY
-#+BEGIN_SRC emacs-lisp
-(use-package ivy
-:bind
-;; ivy-resume resumes last ivy-based completion
-(("C-c C-r" . ivy_resume)
-("C-x B" . ivy-switch-buffer-other-window))
-:custom
-(setq ivy-use-virtual-buffers t)
-(setq ivy-count-format "(%d/%d) ")
-(setq enable-recursive-minibuffers t)
-:config
-(ivy-mode))
-#+END_SRC
-** IVY RICH ALL THE ICONS
-#+BEGIN_SRC emacs-lisp
-  (use-package all-the-icons-ivy-rich
-  :ensure t
-  :init (all-the-icons-ivy-rich-mode 1))
-#+END_SRC 
-** IVY RICH
-#+BEGIN_SRC emacs-lisp
- (use-package ivy-rich
-    :ensure t
-    :after (:all ivy counsel)
-    :init (setq ivy-rich-parse-remote-file-path t)
-    :config (ivy-rich-mode 1))
-#+END_SRC
-* DAP MODE
-#+BEGIN_SRC emacs-lisp
-;; optionally if you want to use debugger
-(use-package dap-mode)
-;; (use-package dap-LANGUAGE) to load the dap adapter for your language
-
-#+END_SRC
-* VISUALS
-** RAINBOW DELIMITERS
-#+BEGIN_SRC emacs-lisp
-(use-package rainbow-delimiters
-  :hook (prog-mode . rainbow-delimiters-mode))
-#+END_SRC 
-** ALL THE ICONS
-This is an icon set that can be used with dired, ibuffer and other emacs programs
-#+BEGIN_SRC emacs-lisp
-  (use-package all-the-icons
-  :ensure t
-  :if (display-graphic-p))
-#+END_SRC 
-*** all the icons dired
-#+BEGIN_SRC emacs-lisp
-(use-package all-the-icons-dired
-:hook (dired-mode . (lambda () (all-the-icons-dired-mode t))))
-#+END_SRC 
-* ESHELL
-#+BEGIN_SRC emacs-lisp
-(use-package eshell-toggle
-  :custom
-  (eshell-toggle-size-fraction 3)
-  (eshell-toggle-use-projectile-root t)
-  (eshell-toggle-run-command nil)
-  (eshell-toggle-init-function #'eshell-toggle-init-ansi-term))
-
-  (use-package eshell-syntax-highlighting
-    :after esh-mode
-    :config
-    (eshell-syntax-highlighting-global-mode +1))
-
-  ;; eshell-syntax-highlighting -- adds fish/zsh-like syntax highlighting.
-  ;; eshell-rc-script -- your profile for eshell; like a bashrc for eshell.
-  ;; eshell-aliases-file -- sets an aliases file for the eshell.
-
-  (setq eshell-rc-script (concat user-emacs-directory "eshell/profile")
-        eshell-aliases-file (concat user-emacs-directory "eshell/aliases")
-        eshell-history-size 5000
-        eshell-buffer-maximum-lines 5000
-        eshell-hist-ignoredups t
-        eshell-scroll-to-bottom-on-input t
-        eshell-destroy-buffer-when-process-dies t
-        eshell-visual-commands'("bash" "fish" "htop" "ssh" "top" "zsh"))
-#+END_SRC
-* PROJECTILE
-#+BEGIN_SRC emacs-lisp
-(use-package projectile
-  :defer t
-  :ensure t
-  ;; :delight '(:eval (concat " " (projectile-project-name)))
-  :delight
-  :custom
-  (projectile-project-search-path '("~/"))
-  (projectile-indexing-method 'alien)
-  (projectile-enable-caching t)
-  (projectile-completion-system 'ivy))
-
-(use-package counsel-projectile
-  :defer t
-  :ensure t
-  :config
-  (add-to-list 'ivy-initial-inputs-alist '(counsel-projectile-switch-project . ""))
-  (counsel-projectile-mode 1)
-  ;; :bind-keymap ("M-s p" . projectile-command-map)
-  :bind (("M-s b" . counsel-projectile-switch-to-buffer)
-         ("M-s d" . counsel-projectile-find-dir)
-         ("M-s p" . (lambda ()
-                      (interactive)
-                      (counsel-projectile-switch-project 4)))))
-#+END_SRC
-* SLY
-#+BEGIN_SRC emacs-lisp
-  (use-package sly)
-#+END_SRC
-* BACKUPS
-#+BEGIN_SRC emacs-lisp
-  (setq backup-directory-alist '(("." . "~/MyEmacsBackups")))
-#+END_SRC
-* MODES
-** UTF
-#+BEGIN_SRC emacs-lisp
-(setq locale-coding-system 'utf-8)
-(set-terminal-coding-system 'utf-8)
-(set-keyboard-coding-system 'utf-8)
-(set-selection-coding-system 'utf-8)
-(prefer-coding-system 'utf-8)
-#+END_SRC
-** C
-#+BEGIN_SRC emacs-lisp
-(setq c-default-style "bsd"
-      c-basic-offset 4)
-#+END_SRC
-* EMOJIFY
-#+BEGIN_SRC emacs-lisp
-(use-package emojify)
-#+END_SRC
-* MAGIT
-#+BEGIN_SRC emacs-lisp
-  (use-package magit
-    :bind ("C-x g" . magit-status))
-#+END_SRC
-* GENERAL
-*** GENERAL FUNCTIONS
-#+BEGIN_SRC emacs-lisp
-  (defun web-url(site) (browse-url-firefox  (concat (concat "https://www." site) ".com")))
-  (defun web(url) (lambda () (interactive) (browse-url-firefox url)))
-
-  (defun web-map(site) (browse-url-firefox (concat (concat "https://www.google.com/maps/@" site) "z?entry=ttu")))
-#+END_SRC
-*** GENERAL CODE
-#+BEGIN_SRC emacs-lisp
-    (use-package general
-        :config
-        (general-evil-setup)
-
-        ;;setup up 'SPC' as global leader key
-        (general-create-definer frog/frogkey
-            :states '(normal insert visual emacs)
-            :keymaps 'override
-            :prefix "SPC" ;; set leader
-            :global-prefix "M-SPC") ;;access leader in insert mode
-
-        (frog/frogkey
-            "w" '(:ignore t :wk "web")
-                "w c" '(:ignore t: :wk "calculators")
-                    "w c g" '((lambda () (interactive) (browse-url-firefox "https://www.desmos.com/calculator")) :wk "GRAPH (Desmos)")
-                    "w c a" '((lambda () (interactive) (browse-url-firefox "https://www.mathpapa.com/algebra-calculator.html")) :wk "ALGEBRAIC (MathPapa)")
-                    "w c s" '((lambda () (interactive) (browse-url-firefox "https://www.desmos.com/scientific")) :wk "SCIENTIFIC (Desmos)")
-                    "w c d" '((lambda () (interactive) (browse-url-firefox "https://www.derivative-calculator.net/")) :wk "DERIVATIVE")
-                    "w c i" '((lambda () (interactive) (web-url "integral-calculator")) :wk "INTEGRAL")
-                    "w c u" '((lambda () (interactive) (web-url "calculatorsoup")) :wk "CALCULATORSOUP")
-                "w s" '(:ignore t :wk "search (SEARCH ENGINES)")
-                    "w s b" '((lambda () (interactive)  (web-url "bing")) :wk "bing")
-                    "w s g" '((lambda () (interactive)  (web-url "google")) :wk "google")
-                    "w s y" '((lambda () (interactive)  (web-url "yahoo")) :wk "yahoo")
-                    "w s a" '((lambda () (interactive)  (web-url "ask")) :wk "ask")
-                    "w s w" '((lambda () (interactive)  (web-url "wolframalpha")) :wk "wolframalpha")
-                "w m" '(:ignore t :wk "map (GOOGLE MAPS)")
-                    "w m g" '((lambda () (interactive) (web-map "55.8497232,-4.2828747,11")) :wk "Glasgow")
-                    "w m l" '((lambda () (interactive) (web-map "51.4787528,-0.185164,10.29")) :wk "London")
-                    "w m d" '((lambda () (interactive) (web-map "54.9955762,-7.3196228,13.17")) :wk "Derry")
-                    "w m n" '((lambda () (interactive) (web-map "40.7940507,-73.9560524,11.04")) :wk "New York")
-                    "w m m" '((lambda () (interactive) (web-map "48.1110477,11.5731642,11.46")) :wk "Munich")
-                    "w m s" '((lambda () (interactive) (web-map" 30.8699794,121.0211044,8.87")) :wk "Shanghai")
-                    "w m k" '((lambda () (interactive) (web-map "22.5566423,88.3518627,11.29")) :wk "Kolkata")
-                    "w m r" '((lambda () (interactive) (web-map "41.8456475,12.512021,10.58")) :wk "Rome"))
-
-        (frog/frogkey
-            "e" '(:ignore t :wk "EVALUATE")
-                "e b" '(eval-buffer :wk "evaluate elisp buffer")
-                "e d" '(eval-defun :wk "eval defun containng or after point")
-                "e e" '(eval-expression :wk "eval elisp expression")
-                "e l" '(eval-last-sexp :wk "eval elisp before point")
-                "e r" '(eval-region :wk "eval elisp in region"))
-
-        (frog/frogkey
-            "z" '(:ignore t :wk "HELP")
-                "z f" '(describe-function :wk "describe function")
-                "z v" '(describe-variable :wk "describe variable")
-                "z u" '((lambda () (interactive) (load-file "~/.emacs.d/init.el")) :wk "Update Emacs init"))
-
-        (frog/frogkey
-             "t" '(:ignore t :wk "TOGGLE")
-                "t n" '(display-line-numbers-mode :wk "Toggle line numbers")
-                "t l" '(visual-line-mode :wk "Toggle Truncated lines")
-                "t t" '(treemacs :wk "Toggle treemacs"))
-
-         (frog/frogkey
-             "f" '(:ignore t :wk "FIND FILE")
-                "f f" '(counsel-find-file :wk "find file")
-                "f s" '(sudo-edit-find-file :wk "sudo find file")
-                "f c" '((lambda () (interactive) (find-file "/home/frog/.config/emacs/config.org")) :wk "config.org")
-                "f p" '((lambda () (interactive) (find-file "/home/frog/public/script_writing/python/snippets.py")) :wk "snippets.py")
-                "f t" '((lambda () (interactive) (find-file "/home/frog/public/taverner/python/main.py")) :wk "taverner main.py")
-                "f h" '((lambda () (interactive) (find-file "/home/frog/RoamNotes/20231023040741-home.org")) :wk "home.org")
-                "f r" '(counsel-recentf :wk "find recent file"))
-  )
-#+END_SRC
-* CORFU
-#+BEGIN_SRC emacs-lisp
-;;; Code Completion
-(use-package corfu
-  :disabled t
-  :ensure t
-  ;; Optional customizations
-  :custom
-  (corfu-cycle t)                 ; Allows cycling through candidates
-  (corfu-auto t)                  ; Enable auto completion
-  (corfu-auto-prefix 2)
-  (corfu-auto-delay 0.8)
-  (corfu-popupinfo-delay '(0.5 . 0.2))
-  (corfu-preview-current 'insert) ; insert previewed candidate
-  (corfu-preselect 'prompt)
-  (corfu-on-exact-match nil)      ; Don't auto expand tempel snippets
-  ;; Optionally use TAB for cycling, default is `corfu-complete'.
-  :bind (:map corfu-map
-              ("M-SPC"      . corfu-insert-separator)
-              ("TAB"        . corfu-next)
-              ([tab]        . corfu-next)
-              ("S-TAB"      . corfu-previous)
-              ([backtab]    . corfu-previous)
-              ("S-<return>" . corfu-insert)
-              ("RET"        . nil))
-
-  :init
-  (global-corfu-mode)
-  (corfu-history-mode)
-  (corfu-popupinfo-mode) ; Popup completion info
-  :config
-  (add-hook 'eshell-mode-hook
-            (lambda () (setq-local corfu-quit-at-boundary t
-                                   corfu-quit-no-match t
-                                   corfu-auto nil)
-              (corfu-mode))
-            nil
-            t))
-(use-package cape
-  :ensure t
-  :defer 10
-  :bind ("C-c f" . cape-file)
-  :init
-  ;; Add `completion-at-point-functions', used by `completion-at-point'.
-  (defun my/add-shell-completion ()
-    (interactive)
-    (cl-pushnew #'cape-history completion-at-point-functions)
-    (cl-pushnew #'pcomplete-completions-at-point completion-at-point-functions))
-  (add-hook 'shell-mode-hook #'my/add-shell-completion nil t)
-
-  :config
-  ;; Silence then pcomplete capf, no errors or messages!
-  (advice-add 'pcomplete-completions-at-point :around #'cape-wrap-silent)
-
-  ;; Ensure that pcomplete does not write to the buffer
-  ;; and behaves as a pure `completion-at-point-function'.
-  (advice-add 'pcomplete-completions-at-point :around #'cape-wrap-purify))
-#+END_SRC
-* LSP
-** LSP MODE
-#+BEGIN_SRC emacs-lisp
-(use-package lsp-mode
-  :init
-  ;; set prefix for lsp-command-keymap (few alternatives - "C-l", "C-c l")
-  (setq lsp-keymap-prefix "C-c l")
-  :hook (;; replace XXX-mode with concrete major-mode(e. g. python-mode)
-         (XXX-mode . lsp)
-         ;; if you want which-key integration
-         (lsp-mode . lsp-enable-which-key-integration))
-  :commands lsp)
-
-;; optionally
-(use-package lsp-ui :commands lsp-ui-mode)
-;; if you are ivy user
-(use-package lsp-ivy :commands lsp-ivy-workspace-symbol)
-#+END_SRC
-** pyright
-#+BEGIN_SRC emacs-lisp
-  (use-package lsp-pyright
-    :ensure t
-    :hook (python-mode . (lambda ()
-                           (require 'lsp-pyright)
-                           (lsp))))
-#+END_SRC
-** C
-#+BEGIN_SRC emacs-lisp
-(add-hook 'c-mode-hook 'lsp)
-(add-hook 'c++-mode-hook 'lsp)
-
-(add-hook 'eglot-managed-mode-hook (lambda () (flymake-mode -1))) ; Disable flymake in eglot
-#+END_SRC
-* GO HOME
-#+BEGIN_SRC emacs-lisp
-;; (find-file "/home/frog/RoamNotes/20231023040741-home.org")
+	 (use-package evil-tutor
+	   :ensure t
+	   :demand t
+	   :after evil
+	   )
 #+END_SRC
