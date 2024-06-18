@@ -5,15 +5,15 @@
 
 * STARTUP
 #+BEGIN_SRC emacs-lisp
-;; make garbage collection happen fewer times
+  ;; make garbage collection happen fewer times
   (setq gc-cons-threshold (* 100 1000 1000))
-  
-;;print startup info
-(add-hook 'emacs-startup-hook
-      #'(lambda ()
-          (message "Startup in %s with %d garbage collections"
-          (emacs-init-time "%.2f")
-          gcs-done)))
+
+  ;;print startup info
+  (add-hook 'emacs-startup-hook
+			#'(lambda ()
+				(message "Startup in %s with %d garbage collections"
+						 (emacs-init-time "%.2f")
+						 gcs-done)))
 #+END_SRC
 * ELPACA
 #+BEGIN_SRC emacs-lisp
@@ -105,10 +105,6 @@
 ** VISUAL_BELL
 #+BEGIN_SRC emacs-lisp
 (setq visible-bell t)
-#+END_SRC
-** TEMPORARY_THEME
-#+BEGIN_SRC emacs-lisp
-(load-theme 'manoj-dark)
 #+END_SRC
 * EXWM
 #+BEGIN_SRC emacs-lisp
@@ -220,30 +216,91 @@ I can't live without these. Putting these first in an attempt to have them load 
 something crashes in the config
 ** EVIL
 #+BEGIN_SRC emacs-lisp
-	;; Expands to: (elpaca evil (use-package evil :demand t))
-	(use-package evil
-	  :ensure t
-	  :demand t
-	  :init ;;tweak evil's config before loading
-		(setq evil-want-integration t) ;; this is optional since already set to true
-		(setq evil-want-keybinding nil)
-		(setq evil-vsplit-window-right t)
-		(setq evil-split-window-below t)
-		 (setq evil-want-C-i-jump nil)
-		(evil-mode) 
-  (define-key evil-insert-state-map (kbd "C-g") 'evil-normal-state))
+  ;; Expands to: (elpaca evil (use-package evil :demand t))
+  (use-package evil
+	:ensure t
+	:demand t
+	:init ;;tweak evil's config before loading
+	(setq evil-want-integration t) ;; this is optional since already set to true
+	(setq evil-want-keybinding nil)
+	(setq evil-vsplit-window-right t)
+	(setq evil-split-window-below t)
+	(setq evil-want-C-i-jump nil)
+	(evil-mode) 
+	(define-key evil-insert-state-map (kbd "C-g") 'evil-normal-state))
 
-	 (use-package evil-collection
-		:ensure t
-		:demand t
-		:after evil
-		:config
-		(setq evil-collection-mode-list '(dashboard dired ibuffer))
-		(evil-collection-init))
+  (use-package evil-collection
+	:ensure t
+	:demand t
+	:after evil
+	:config
+	(setq evil-collection-mode-list '(dashboard dired ibuffer))
+	(evil-collection-init))
 
-	 (use-package evil-tutor
-	   :ensure t
-	   :demand t
-	   :after evil
-	   )
+  (use-package evil-tutor
+	:ensure t
+	:demand t
+	:after evil
+	)
+
+  (use-package evil-org
+	:ensure t
+	:demand t
+	:after org
+	:hook (org-mode . (lambda () evil-org-mode))
+	:config
+	(require 'evil-org-agenda)
+	(evil-org-agenda-set-keys))
 #+END_SRC
+** THEME
+#+BEGIN_SRC emacs-lisp
+  (use-package cyberpunk-theme
+	:ensure t
+	:demand t
+	:init (load-theme 'cyberpunk t))
+#+END_SRC 
+
+#+BEGIN_SRC emacs-lisp
+  (defun my-set-foreground-color (&optional frame)
+  "Set custom foreground color."
+  (with-selected-frame (or frame (selected-frame))
+    (set-foreground-color "green")))
+
+;; Run later, for client frames...
+(add-hook 'after-make-frame-functions 'my-set-foreground-color)
+;; ...and now, for the initial frame.
+(my-set-foreground-color)
+#+END_SRC
+** ORG
+*** ROAM
+#+BEGIN_SRC emacs-lisp
+  (use-package org-roam
+	:ensure t
+	:demand t
+	:init
+	(setq org-roam-v2-ack t)
+	:custom
+	(org-roam-directory "~/RoamNotes")
+	(org-roam-completion-everywhere t)
+	:bind (("C-c n l" . org-roam-buffer-toggle)
+		   ("C-c n f" . org-roam-node-find)
+		   ("C-c n i" . org-roam-node-insert)
+		   :map org-mode-map
+		   ("C-M-i"    . completion-at-point))
+	:config
+	(org-roam-setup))
+
+#+END_SRC
+*** BULLETS
+#+BEGIN_SRC emacs-lisp
+  (add-hook 'org-mode-hook 'org-indent-mode)
+  (use-package org-bullets
+	:ensure t
+	:demand t
+  :after org
+  :hook (org-mode . org-bullets-mode)
+  :custom
+  (org-bullets-bullet-list '("◉" "○" "●" "○" "●" "○" "●"))
+  (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
+#+END_SRC
+
