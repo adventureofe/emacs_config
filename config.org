@@ -1,4 +1,4 @@
-#+TITLE: Frogmacs Cofig
+#+TITLE: Frogmacs Config
 #+AUTHOR: AdventureOfE
 #+DESCRIPTION: frogmacs config
 #+STARTUP: overview
@@ -106,6 +106,15 @@
 #+BEGIN_SRC emacs-lisp
 (setq visible-bell t)
 #+END_SRC
+** SHORT_ANSWERS_FOR_CONFIRMATION
+#+BEGIN_SRC emacs-lisp
+  (setq use-short-answers t)
+#+END_SRC
+** NO_BLINKY_CURSOR
+#+BEGIN_SRC emacs-lisp
+(blink-cursor-mode -1)
+#+END_SRC
+
 * EXWM
 #+BEGIN_SRC emacs-lisp
   (defun efs/run-in-background (command)
@@ -303,4 +312,74 @@ something crashes in the config
   (org-bullets-bullet-list '("◉" "○" "●" "○" "●" "○" "●"))
   (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
 #+END_SRC
+** DOOM MODELINE
+#+BEGIN_SRC emacs-lisp
+  (use-package doom-modeline
+    :ensure t
+    :demand t
+    :init (doom-modeline-mode 1)
+    :custom ((doom-modeline-height 15)))
+#+END_SRC
+* BACKUPS
+#+BEGIN_SRC emacs-lisp
+  (setq backup-directory-alist '(("." . "~/MyEmacsBackups")))
+#+END_SRC
+* WHICH-KEY
+Taken directly from emacs from scratch by Daviwil
+#+BEGIN_SRC emacs-lisp
+  (use-package which-key
+    :ensure t
+    :demand t
+    :diminish which-key-mode
+    :config
+    (which-key-mode)
+    (setq which-key-idle-delay 1))
+#+END_SRC
+* LSP-MODE
+LSP mode relies on flycheck and company mode
+#+BEGIN_SRC emacs-lisp
+  (use-package lsp-mode
+    :ensure t
+    :demand t
+    :init
+    ;; set prefix for lsp-command-keymap (few alternatives - "C-l", "C-c l")
+    (setq lsp-keymap-prefix "C-c l")
+    :hook (;; replace XXX-mode with concrete major-mode(e. g. python-mode)
+           (python-mode . lsp)
+           ;; if you want which-key integration
+           (lsp-mode . lsp-enable-which-key-integration))
+    :commands lsp)
 
+  ;; optionally
+  (use-package lsp-ui
+    :ensure t
+    :demand t
+    :commands lsp-ui-mode)
+
+#+END_SRC
+* COMPANY-MODE
+Taken directly from emacs from scratch by Daviwil
+
+Company Mode provides a nicer in-buffer completion interface than completion-at-point which is more reminiscent of what you would expect from an IDE. We add a simple configuration to make the keybindings a little more useful (TAB now completes the selection and initiates completion at the current location if needed).
+
+We also use company-box to further enhance the look of the completions with icons and better overall presentation.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package company
+    :after lsp-mode
+    :ensure t
+    :demand t
+    :hook lsp-mode
+    :bind (:map company-active-map
+                ("<tab>" . company-complete-selection))
+    (:map lsp-mode-map
+          ("<tab>" . company-indent-or-complete-common))
+    :custom
+    (company-minimum-prefix-length 1)
+    (company-idle-delay 0.0))
+
+  (use-package company-box
+    :ensure t
+    :demand t
+    :hook (company-mode . company-box-mode))
+#+END_SRC
