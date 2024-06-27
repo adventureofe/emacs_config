@@ -4,6 +4,8 @@
 #+STARTUP: overview
 
 * STARTUP
+this apparently makes emacs stop collecting garbage at startup to speed it up
+also tells you how long it took to load after completion
 #+BEGIN_SRC emacs-lisp
   ;; make garbage collection happen fewer times
   (setq gc-cons-threshold (* 100 1000 1000))
@@ -16,6 +18,8 @@
 						 gcs-done)))
 #+END_SRC
 * ELPACA
+directly copy-pasted from the elpaca github.
+It gets the package manager working which is the important part to understand
 #+BEGIN_SRC emacs-lisp
   (defvar elpaca-installer-version 0.7)
   (defvar elpaca-directory (expand-file-name "elpaca/" user-emacs-directory))
@@ -68,6 +72,7 @@
 (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
 #+END_SRC
 ** ZOOMING IN / OUT
+I always want  ctrl plus, ctrl minus and ctrl scrollwheel to zoom
 #+BEGIN_SRC emacs-lisp
 (global-set-key (kbd "C-=") 'text-scale-increase)
 (global-set-key (kbd "C--") 'text-scale-decrease)
@@ -75,6 +80,7 @@
 (global-set-key (kbd "<C-wheel-down>") 'text-scale-decrease)
 #+END_SRC  
 ** DISABLE TOOLBARS
+the toolbars are all essentially useless just learn the commands
 #+BEGIN_SRC emacs-lisp
   (menu-bar-mode -1)
   (tool-bar-mode -1)
@@ -83,19 +89,23 @@
   (set-window-scroll-bars (minibuffer-window) nil nil)
 #+END_SRC
 ** INHIBIT_STARTUP_GUFF
+just start the editor, I don't need anything else
 #+BEGIN_SRC emacs-lisp
 (setq inhibit-splash-screen t)
 (setq inhibit-startup-message t)
 #+END_SRC 
 ** CONSERVATIVE SCROLLING
+stops emacs scrolling being so jumpy
 #+BEGIN_SRC emacs-lisp
-(setq scroll-conservatively 100)
+(setq scroll-conservatively 10000)
 #+END_SRC 
 ** FANCY_LAMBDA_SYMBOLS_ETC
+makes emacs display the lambda keyword as the fancy λ symbol in python
 #+BEGIN_SRC emacs-lisp
 (global-prettify-symbols-mode t)
 #+END_SRC
 ** TAB_WIDTH
+should always be 4 spaces wide
 #+BEGIN_SRC emacs-lisp
 (setq-default tab-width 4)
 
@@ -103,19 +113,43 @@
 (global-subword-mode 1)
 #+END_SRC
 ** VISUAL_BELL
+makes emacs flash when you try and go past the top or bottom of file
 #+BEGIN_SRC emacs-lisp
 (setq visible-bell t)
 #+END_SRC
 ** SHORT_ANSWERS_FOR_CONFIRMATION
+you only need to hit y or n, not type "yes" or "no" for everything
 #+BEGIN_SRC emacs-lisp
   (setq use-short-answers t)
 #+END_SRC
 ** NO_BLINKY_CURSOR
+I don't like my cursor being invisible half the time
 #+BEGIN_SRC emacs-lisp
 (blink-cursor-mode -1)
 #+END_SRC
+** BRACKET_MATCHING
+highlighting a bracket also highlights it's matching bracket
+#+BEGIN_SRC emacs-lisp
+(show-paren-mode 1)
+(setq show-paren-delay 0)
+#+END_SRC
+** LINE NUMBERS
+I want line numbers in programming buffers
+#+BEGIN_SRC emacs-lisp
 
+  (column-number-mode)
+  (global-display-line-numbers-mode t)
+
+  ;; Disable line numbers for some modes
+  (dolist (mode '(org-mode-hook
+                  term-mode-hook
+                  shell-mode-hook
+                  treemacs-mode-hook
+                  eshell-mode-hook))
+    (add-hook mode (lambda () (display-line-numbers-mode 0))))
+#+END_SRC
 * EXWM
+All code taken directly from daviwil, I have had no problems with it 
 #+BEGIN_SRC emacs-lisp
   (defun efs/run-in-background (command)
 	  (let ((command-parts (split-string command "[ ]+")))
@@ -224,6 +258,7 @@
 I can't live without these. Putting these first in an attempt to have them load even if
 something crashes in the config
 ** EVIL
+using vi keybindings in emacs for best of both worlds 
 #+BEGIN_SRC emacs-lisp
   ;; Expands to: (elpaca evil (use-package evil :demand t))
   (use-package evil
@@ -262,6 +297,7 @@ something crashes in the config
 	(evil-org-agenda-set-keys))
 #+END_SRC
 ** THEME
+what a lovely future retro colour theme
 #+BEGIN_SRC emacs-lisp
   (use-package cyberpunk-theme
 	:ensure t
@@ -282,6 +318,7 @@ something crashes in the config
 #+END_SRC
 ** ORG
 *** ROAM
+this is the best note taking software out there
 #+BEGIN_SRC emacs-lisp
   (use-package org-roam
 	:ensure t
@@ -301,6 +338,7 @@ something crashes in the config
 
 #+END_SRC
 *** BULLETS
+fancy bullets instead of a string of asterisks is real nice
 #+BEGIN_SRC emacs-lisp
   (add-hook 'org-mode-hook 'org-indent-mode)
   (use-package org-bullets
@@ -313,6 +351,8 @@ something crashes in the config
   (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
 #+END_SRC
 ** DOOM MODELINE
+the doom modeline is such a vast improvement over the default modeline
+both visually and functionally
 #+BEGIN_SRC emacs-lisp
   (use-package doom-modeline
     :ensure t
@@ -321,22 +361,28 @@ something crashes in the config
     :custom ((doom-modeline-height 15)))
 #+END_SRC
 * BACKUPS
+I use version control. I don't need backup files everywhere
 #+BEGIN_SRC emacs-lisp
   (setq backup-directory-alist '(("." . "~/MyEmacsBackups")))
+  (setq make-backup-files nil)
+  (setq auto-save-default nil)
 #+END_SRC
 * WHICH-KEY
 Taken directly from emacs from scratch by Daviwil
+makes it so you can actually see what commands are available to you
 #+BEGIN_SRC emacs-lisp
   (use-package which-key
     :ensure t
     :demand t
     :diminish which-key-mode
-    :config
+    :init
     (which-key-mode)
-    (setq which-key-idle-delay 1))
+    :config
+    (setq which-key-idle-delay 0.5))
 #+END_SRC
 * LSP-MODE
 LSP mode relies on flycheck and company mode
+allows for fancy IDE features within emacs
 #+BEGIN_SRC emacs-lisp
   (use-package lsp-mode
     :ensure t
@@ -355,7 +401,6 @@ LSP mode relies on flycheck and company mode
     :ensure t
     :demand t
     :commands lsp-ui-mode)
-
 #+END_SRC
 * COMPANY-MODE
 Taken directly from emacs from scratch by Daviwil
@@ -365,21 +410,65 @@ Company Mode provides a nicer in-buffer completion interface than completion-at-
 We also use company-box to further enhance the look of the completions with icons and better overall presentation.
 
 #+BEGIN_SRC emacs-lisp
-  (use-package company
-    :after lsp-mode
-    :ensure t
-    :demand t
-    :hook lsp-mode
-    :bind (:map company-active-map
-                ("<tab>" . company-complete-selection))
-    (:map lsp-mode-map
-          ("<tab>" . company-indent-or-complete-common))
-    :custom
-    (company-minimum-prefix-length 1)
-    (company-idle-delay 0.0))
+    (use-package company
+      :after lsp-mode
+      :ensure t
+      :demand t
+      :hook lsp-mode
+      :bind (:map company-active-map
+                  ;; complete by pressing tab
+                  ;;("<tab>" . company-complete-selection)
+                  ;; make it vimmy
+                  ("C-j" . company-select-next)
+                  ("C-k" . company-select-previous))
+      (:map lsp-mode-map
+            ("<tab>" . company-indent-or-complete-common))
+      :custom
+      (company-minimum-prefix-length 1)
+      (company-idle-delay 0.1))
 
+    ;;(use-package company-box
+      ;;:ensure t
+      ;;:demand t
+      ;;:hook (company-mode . company-box-mode))
+
+    ;; company-box for a modern UI
   (use-package company-box
     :ensure t
     :demand t
-    :hook (company-mode . company-box-mode))
+    :hook company-mode
+    :custom-face
+    (company-tooltip ((t (:inherit default :background "#000000"))))
+    (company-tooltip-selection ((t (:inherit font-lock-function-name-face :background "#666666"))))
+    (company-tooltip-common ((t (:inherit font-lock-constant-face))))
+    (company-tooltip-annotation ((t (:inherit font-lock-builtin-face))))
+    (company-scrollbar-bg ((t (:background "#444444"))))
+    (company-scrollbar-fg ((t (:background "#888888")))))
+#+END_SRC
+* YASNIPPET
+#+BEGIN_SRC emacs-lisp
+  (use-package yasnippet
+    :ensure t
+    :demand t
+    :init
+    (setq yas-snippet-dirs '("~/.config/emacs/snippets"))
+    :config
+    ;;(add-hook 'prog-mode-hook #'yas-minor-mode)
+    (yas-global-mode 1))
+    ;;:bind (:map yas-minor-mode-map
+    ;;            ("<tab>" . yas-expand)
+    ;;            ("TAB" . yas-expand)))
+#+END_SRC
+* FONT
+#+BEGIN_SRC emacs-lisp
+  (set-face-attribute 'default nil :font "Iosevka" :height 130)
+#+END_SRC
+* PROGRAMMING_MODES
+** TYPESCRIPT
+#+BEGIN_SRC emacs-lisp
+(use-package typescript-mode
+  :mode "\\.ts\\'"
+  :hook (typescript-mode . lsp-deferred)
+  :config
+  (setq typescript-indent-level 2))
 #+END_SRC
