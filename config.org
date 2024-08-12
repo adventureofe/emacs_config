@@ -440,7 +440,7 @@ We also use company-box to further enhance the look of the completions with icon
         (company-minimum-prefix-length 1)
         ;;had issues with the x server crashing when using typescript lsp and this being at 0.1
         ;;changed it but don't know if that was the root cause yet
-        (company-idle-delay 0.5))
+        (company-idle-delay 0.8))
 
       ;; company-box for a modern UI
   ;; makes a little box of completions

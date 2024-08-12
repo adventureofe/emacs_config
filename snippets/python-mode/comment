@@ -2,9 +2,8 @@
 # name: comment 
 # key: comment
 # --
-# python comment
+# single line comment
 
 """
-Multi Line
-Comment
+Multi Line comment (doc string)
 """

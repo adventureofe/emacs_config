@@ -1,0 +1,25 @@
+# -*- mode: snippet -*-
+# name: print
+# key: print
+# --
+(defconst my-string "Emacs3")
+
+(defun my-greeting (greeting)
+  "Return a GREETING."
+  (let ((start "Hello, ")
+		(end "!\n"))
+  (concat start greeting end)))
+
+(defconst greeting (my-greeting my-string))
+
+(message greeting) ;;display in minibuffer
+(insert greeting) ;;insert in buffer
+(print greeting) ;;prints object in minibuffer
+(prin1 greeting) ;;prints object in minibuffer no newline
+(princ greeting) ;;prints human readable object
+(pp greeting) ;;pretty print
+(defconst other-greeting (format "Hello, %s!" "Emacs")) ;;save as var
+(message "%d" (length greeting)) ;;get length
+(message-box "Hello, Emacs!") ;;open message box
+(write-region "Hello, Emacs!" nil "/path/to/somefile.txt") ;;to some file
+

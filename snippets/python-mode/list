@@ -1,0 +1,39 @@
+# -*- mode: snippet -*-
+# name: list
+# key: list 
+# --
+my_list = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] #1-10
+my_list_mimic = list(range(1, 11)) # 1-10
+my_list_stepped = list(range(0, 20, 2)) #0-18 in steps of 2
+my_list_double_lambda = [(lambda x: x * 2)(x) for x in my_list]
+my_list_sine_lambda = [(lambda x: np.sin(x))(x) for x in my_list]
+my_list_square = [x**2 for x in my_list]
+my_list_even = [x for x in my_list if x % 2 == 0]
+
+last_element = my_list.pop()
+
+my_list.append(7)
+my_list_append = my_list + [7]
+
+my_list.insert(2, 2.5)
+insert_index = 2
+my_list_insert = my_list[:insert_index] + [32] + my_list[insert_index:]
+log.info(my_list)
+
+my_list.remove(2.5)
+my_list_remove = [x for x in my_list if x != 2.5]
+
+my_list_shuffled = random.sample(my_list, len(my_list))
+random.shuffle(my_list)
+log.info(my_list)
+
+my_list_sorted = sorted(my_list)
+my_list.sort()
+log.info(my_list)
+
+reversed_list = my_list[::-1]
+my_list.reverse()
+log.info(my_list)
+
+my_sublist = my_list[1:4]
+log.info(my_list)

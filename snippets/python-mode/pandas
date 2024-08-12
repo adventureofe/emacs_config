@@ -1,0 +1,25 @@
+# -*- mode: snippet -*-
+# name: pandas
+# key: pandas
+# --
+    column = ["Mark", "Luke", "Adam", "Maria"]
+
+    titled_column = {"name": column,
+                     "height": [1.67, 1.9, 0.24, 77],
+                     "weight": [54, 23, 63, 53]
+    }
+
+    df_people = pd.DataFrame(titled_column)
+    
+    print(df_people["weight"])
+    print(df_people["height"])
+    print(df_people.iloc[2])
+    print(df_people.describe())
+    print(df_people[['name', 'weight']])  # Access multiple columns
+
+    df_people['age'] = [25, 30, 22, 28]
+
+# Set 'name' column as index
+df_set_index = df.set_index('name')
+print("\nDataFrame with 'name' as index:")
+print(df_set_index)

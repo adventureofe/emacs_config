@@ -1,0 +1,36 @@
+{
+    "version": 1,
+    "disable_existing_loggers": false,
+    "formatters": {
+        "simple": {
+            "()": "colorlog.ColoredFormatter",
+            "format": "%(log_color)s(%(asctime)s) _ (%(lineno)d) _ %(funcName)s\t%(levelname)s\t%(message)s",
+            "log_colors": {
+                "DEBUG": "bold_white",
+                "INFO": "bold_green",
+                "WARNING": "bold_cyan",
+                "ERROR": "bold_yellow",
+                "CRITICAL": "bold_red"
+            },
+            "datefmt": "%H:%M:%S"
+        }
+    },
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+            "formatter": "simple",
+            "stream": "ext://sys.stdout"
+        },
+        "file": {
+            "class": "logging.FileHandler",
+            "filename": "app.log",
+            "formatter": "simple"
+        }
+    },
+    "loggers": {
+        "root": {
+            "level": "DEBUG",
+            "handlers": ["console", "file"]
+        }
+    }
+}

@@ -1,0 +1,15 @@
+# -*- mode: snippet -*-
+# name: constants 
+# key: constants 
+# --
+my_pi = 3.1415926535897932385
+my_e = 2.7182818284590452354
+my_sqrt_2 = 1.4142135623730950488
+my_golden_ratio = 1.6180339887498948482
+my_sqrt_3 = 1.7320508075688772935
+my_sqrt_5 = 2.2360679774997896964
+my_natural_log_2 = 0.69314718055994530942
+catalan_constant = 0.91596559417721901505
+speed_of_light_metres_per_second = 299792458
+speed_of_light_miles_per_second = 186000 
+speed_of_light_miles_per_hour = 671000000

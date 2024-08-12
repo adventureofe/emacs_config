@@ -1,0 +1,14 @@
+# -*- mode: snippet -*-
+# name: amdahls-law 
+# key: amdahls-law
+# --
+double amdahls_law_ratio(double ratio, double speedup)
+{
+    return 1 / (1 - ratio + ratio / speedup);
+}
+
+double amdahls_law_percent(double percent, double speedup)
+{
+    return 1 / (1 - (percent / 100) + (percent / 100) / speedup);
+}
+

@@ -1,6 +1,9 @@
-// c# comment
-
-/*
-multi line
-comment
-*/
+G
+{
+    class Hello {         
+        static void Main(string[] args)
+        {
+            System.Console.WriteLine("Hello World!");
+        }
+    }
+}

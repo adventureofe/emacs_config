@@ -1,0 +1,46 @@
+# -*- mode: snippet -*-
+# name: print 
+# key: print
+# --
+import logging
+import logging.config
+import colorlog
+
+log = logging.getLogger("my_logger")
+
+log_config = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters":{
+        "simple":{
+            "()": "colorlog.ColoredFormatter",
+            "format": "%(log_color)s(%(asctime)s)\t(%(lineno)d) %(funcName)s\t%(levelname)s\t%(message)s",
+            "log_colors": {
+                "DEBUG": "bold_white",
+                "INFO": "bold_green",
+                "WARNING": "bold_cyan",
+                "ERROR": "bold_yellow",
+                "CRITICAL": "bold_red",
+            },
+        }
+    },
+    "handlers": {
+        "stdout": {
+            "class": "logging.StreamHandler",
+            "formatter": "simple",
+            "stream": "ext://sys.stdout",
+        }
+    },
+    "loggers":{
+        "root": { "level": "DEBUG", "handlers": ["stdout"]}
+    }
+}
+
+logging.config.dictConfig(log_config)
+
+#in main
+log.debug("debug")
+log.info("info")
+log.warning("warning")
+log.error("error")
+log.critical("critical")
