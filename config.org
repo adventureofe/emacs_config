@@ -100,7 +100,7 @@ stops emacs scrolling being so jumpy
 (setq scroll-conservatively 10000)
 #+END_SRC 
 ** FANCY_LAMBDA_SYMBOLS_ETC
-makes emacs display the lambda keyword as the fancy λ symbol in python
+makes emacs display the lambda keyword as the fancy λ symbol in python.
 #+BEGIN_SRC emacs-lisp
 (global-prettify-symbols-mode t)
 #+END_SRC
