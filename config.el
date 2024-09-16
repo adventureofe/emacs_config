@@ -1,56 +1,14 @@
-;; make garbage collection happen fewer times
-(setq gc-cons-threshold (* 100 1000 1000))
+(require 'package)
+(add-to-list 'package-archives '("gnu"   . "https://elpa.gnu.org/packages/"))
+(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
+(package-initialize)
 
-;;print startup info
-(add-hook 'emacs-startup-hook
-		      #'(lambda ()
-			      (message "Startup in %s with %d garbage collections"
-					       (emacs-init-time "%.2f")
-					       gcs-done)))
-
-(defvar elpaca-installer-version 0.7)
-  (defvar elpaca-directory (expand-file-name "elpaca/" user-emacs-directory))
-  (defvar elpaca-builds-directory (expand-file-name "builds/" elpaca-directory))
-  (defvar elpaca-repos-directory (expand-file-name "repos/" elpaca-directory))
-  (defvar elpaca-order '(elpaca :repo "https://github.com/progfolio/elpaca.git"
-								:ref nil :depth 1
-								:files (:defaults "elpaca-test.el" (:exclude "extensions"))
-								:build (:not elpaca--activate-package)))
-  (let* ((repo  (expand-file-name "elpaca/" elpaca-repos-directory))
-		 (build (expand-file-name "elpaca/" elpaca-builds-directory))
-		 (order (cdr elpaca-order))
-		 (default-directory repo))
-	(add-to-list 'load-path (if (file-exists-p build) build repo))
-	(unless (file-exists-p repo)
-	  (make-directory repo t)
-	  (when (< emacs-major-version 28) (require 'subr-x))
-	  (condition-case-unless-debug err
-		  (if-let ((buffer (pop-to-buffer-same-window "*elpaca-bootstrap*"))
-				   ((zerop (apply #'call-process `("git" nil ,buffer t "clone"
-												   ,@(when-let ((depth (plist-get order :depth)))
-													   (list (format "--depth=%d" depth) "--no-single-branch"))
-												   ,(plist-get order :repo) ,repo))))
-				   ((zerop (call-process "git" nil buffer t "checkout"
-										 (or (plist-get order :ref) "--"))))
-				   (emacs (concat invocation-directory invocation-name))
-				   ((zerop (call-process emacs nil buffer nil "-Q" "-L" "." "--batch"
-										 "--eval" "(byte-recompile-directory \".\" 0 'force)")))
-				   ((require 'elpaca))
-				   ((elpaca-generate-autoloads "elpaca" repo)))
-			  (progn (message "%s" (buffer-string)) (kill-buffer buffer))
-			(error "%s" (with-current-buffer buffer (buffer-string))))
-		((error) (warn "%s" err) (delete-directory repo 'recursive))))
-	(unless (require 'elpaca-autoloads nil t)
-	  (require 'elpaca)
-	  (elpaca-generate-autoloads "elpaca" repo)
-	  (load "./elpaca-autoloads")))
-  (add-hook 'after-init-hook #'elpaca-process-queues)
-  (elpaca `(,@elpaca-order))
-
- ;; Install use-package support
-(elpaca elpaca-use-package
-  ;; Enable use-package :ensure support for Elpaca.
-  (elpaca-use-package-mode))
+(unless (package-installed-p 'use-package)
+  (package-refresh-contents)
+  (package-install 'use-package))
+(eval-and-compile
+  (setq use-package-always-ensure t
+        use-package-expand-minimally t))
 
 ;; Make ESC quit prompts
 (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
@@ -100,108 +58,9 @@
 
 (prefer-coding-system 'utf-8)
 
-(defun efs/run-in-background (command)
-	(let ((command-parts (split-string command "[ ]+")))
-		(apply #'call-process `(,(car command-parts) nil 0 nil ,@(cdr command-parts)))))
-
-(defun efs/exwm-update-class ()
-	(exwm-workspace-rename-buffer exwm-class-name))
-
-(defun efs/exwm-update-title ()
-	(pcase exwm-class-name
-		("Firefox" (exwm-workspace-rename-buffer (format "Firefox: %s" exwm-title)))))
-
-(defun dw/exwm-init-hook ()
-	;; Make workspace 1 be the one where we land at startup
-	(exwm-workspace-switch-create 1))
-
- (defun efs/configure-window-by-class ()
-	 (interactive)
-	 (pcase exwm-class-name
-		("Firefox" (exwm-workspace-move-window 2))
-		("Sol" (exwm-workspace-move-window 3))
-		("mpv" (exwm-floating-toggle-floating)
-		(exwm-layout-toggle-mode-line))))
-
-      ;; This function should be used only after configuring autorandr!
-      (defun efs/update-displays ()
-	      (efs/run-in-background "autorandr --change --force")
-	      (efs/set-wallpaper)
-	      (message "Display config: %s"
-		      (string-trim (shell-command-to-string "autorandr --current"))))
-
-      (use-package exwm
-	  :ensure t
-	  :demand t
-	      :config
-	      (setq exwm-workspace-number 4)
-
-	      ;; When window "class" updates, use it to set the buffer name
-	      (add-hook 'exwm-update-class-hook #'efs/exwm-update-class)
-
-	      ;; When window title updates, use it to set the buffer name
-	      (add-hook 'exwm-update-title-hook #'efs/exwm-update-title)
-
-	      ;; Configure windows as they're created
-	      (add-hook 'exwm-manage-finish-hook #'efs/configure-window-by-class)
-
-	      (setq exwm-input-prefixkeys
-		      '(?\C-x
-		      ?\C-u
-		      ?\C-h
-		      ?\M-x
-		      ?\M-`
-		      ?\M-&
-		      ?\M-:
-		      ?\C-\M-j
-		      ?\C-\ ))
-
-	      ;;ctrl + q will enable the next key to be sent directly
-	      (define-key exwm-mode-map [?\C-q] 'exwm-input-send-next-key)
-
-	      (require 'exwm-randr)
-	      ;; set workspaces to different screens
-	      (setq exwm-randr-workspace-monitor-plist '(1 "DVI-D-0"))
-	      (add-hook 'exwm-randr-screen-change-hook
-		      (lambda ()
-			      (start-process-shell-command "xrandr" nil "xrandr --output DVI-D-0 --left-of --output HDMI-0 --auto")))		
-	      (exwm-randr-enable)
-
-
-	      ;; set workspaces to different screens
-	      (setq exwm-randr-workspace-monitor-plist '(2 "HDMI-0" 3 "HDMI-0"))
-
-	      ;; Rebind CapsLock to Ctrl
-	      (start-process-shell-command "xmodmap" nil "xmodmap ~/.config/emacs/Xmodmap")
-
-
-	      ;; Load the system tray before exwm-init
-	      (require 'exwm-systemtray)
-	      (setq exwm-systemtray-height 32)
-	      (exwm-systemtray-enable)
-
-	      (setq exwm-input-global-keys
-		      `(
-			      ([?\s-r] . exwm-reset)
-			      ([s-left] . windmove-left)
-			      ([s-right]. windmove-right)
-			      ([?\s-w] . exwm-workspace-switch)
-			      ([?\s-&] . (lambda (command)
-				      (interactive (list (read-shell-command "$ ")))
-				      (start-process-shell-command command nil command)))
-
-			      ;; Switch workspace
-			      ([?\s-w] . exwm-workspace-switch)
-
-			      ;; 's-N': Switch to certain workspace with Super (Win) plus a number key (0 - 9)
-			      ,@(mapcar (lambda (i)
-				      `(,(kbd (format "s-%d" i)) .
-					      (lambda ()
-						      (interactive)
-						      (exwm-workspace-switch-create ,i))))
-				      (number-sequence 0 9))))
-
-	      (exwm-enable))
+(setq backup-directory-alist '(("." . "~/MyEmacsBackups")))
+(setq make-backup-files nil)
+(setq auto-save-default nil)
 
 ;; Expands to: (elpaca evil (use-package evil :demand t))
 (use-package evil
@@ -254,22 +113,6 @@
 ;; ...and now, for the initial frame.
 (my-set-foreground-color)
 
-(use-package org-roam
-      :ensure t
-      :demand t
-      :init
-      (setq org-roam-v2-ack t)
-      :custom
-      (org-roam-directory "~/RoamNotes")
-      (org-roam-completion-everywhere t)
-      :bind (("C-c n l" . org-roam-buffer-toggle)
-		 ("C-c n f" . org-roam-node-find)
-		 ("C-c n i" . org-roam-node-insert)
-		 :map org-mode-map
-		 ("C-M-i"    . completion-at-point))
-      :config
-      (org-roam-setup))
-
 (add-hook 'org-mode-hook 'org-indent-mode)
 (use-package org-bullets
       :ensure t
@@ -286,10 +129,6 @@
   :init (doom-modeline-mode 1)
   :custom ((doom-modeline-height 15)))
 
-(setq backup-directory-alist '(("." . "~/MyEmacsBackups")))
-(setq make-backup-files nil)
-(setq auto-save-default nil)
-
 (use-package which-key
   :ensure t
   :demand t
@@ -298,25 +137,6 @@
   (which-key-mode)
   :config
   (setq which-key-idle-delay 0.5))
-
-(use-package lsp-mode
-  :ensure t
-  :demand t
-  :init
-  ;; set prefix for lsp-command-keymap (few alternatives - "C-l", "C-c l")
-  (setq lsp-keymap-prefix "C-c l")
-  :hook (;; replace XXX-mode with concrete major-mode(e. g. python-mode)
-         (python-mode . lsp)
-         (typescript-mode . lsp)
-         ;; if you want which-key integration
-         (lsp-mode . lsp-enable-which-key-integration))
-  :commands lsp)
-
-;; optionally, this makes errors show up on the right hand side of the screen
-(use-package lsp-ui
-  :ensure t
-  :demand t
-  :commands lsp-ui-mode)
 
 ;; to solve conflicts between company, yasnippet and tabbing
 (defun company-yasnippet-or-completion ()
@@ -363,11 +183,9 @@
   :ensure t
   :demand t
   :init
-  (setq yas-snippet-dirs '("~/.config/emacs/snippets"))
+  (setq yas-snippet-dirs '("~/.emacs.d/snippets"))
   :config
   (yas-global-mode 1))
-
-(set-face-attribute 'default nil :font "Iosevka" :height 130)
 
 (use-package flycheck
 :ensure t
